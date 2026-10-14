@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-14T14:03:43.744Z",
+  "updatedAt": "2026-10-14T14:03:47.946Z",
   "habits": [
     {
       "id": 1,
@@ -9,62 +9,6 @@
         false,
         false,
         true,
-        false,
-        false,
-        false,
-        false
-      ]
-    },
-    {
-      "id": 2,
-      "name": "Hidratação (3L) + Eletrólitos / Suplementos",
-      "category": "💧 Saúde",
-      "days": [
-        false,
-        false,
-        false,
-        false,
-        false,
-        false,
-        false
-      ]
-    },
-    {
-      "id": 3,
-      "name": "Prática de Idiomas (Francês / Espanhol 15m)",
-      "category": "📚 Estudo",
-      "days": [
-        false,
-        false,
-        false,
-        false,
-        false,
-        false,
-        false
-      ]
-    },
-    {
-      "id": 4,
-      "name": "Leitura / Revisão da Faculdade (RI)",
-      "category": "📚 Estudo",
-      "days": [
-        false,
-        false,
-        false,
-        false,
-        false,
-        false,
-        false
-      ]
-    },
-    {
-      "id": 5,
-      "name": "Sono Reparador (7h30+) & Mobilidade",
-      "category": "🧘 Mente",
-      "days": [
-        false,
-        false,
-        false,
         false,
         false,
         false,
