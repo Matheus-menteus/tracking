@@ -1,14 +1,14 @@
 {
-  "updatedAt": "2026-10-14T13:44:45.684Z",
+  "updatedAt": "2026-10-14T14:03:33.199Z",
   "habits": [
     {
       "id": 1,
       "name": "Treino do Dia (Swim / Bike / Run)",
       "category": "🏃 Esporte",
       "days": [
-        true,
-        true,
-        true,
+        false,
+        false,
+        false,
         false,
         false,
         false,
@@ -20,9 +20,9 @@
       "name": "Hidratação (3L) + Eletrólitos / Suplementos",
       "category": "💧 Saúde",
       "days": [
-        true,
-        true,
-        true,
+        false,
+        false,
+        false,
         false,
         false,
         false,
@@ -34,9 +34,9 @@
       "name": "Prática de Idiomas (Francês / Espanhol 15m)",
       "category": "📚 Estudo",
       "days": [
-        true,
         false,
-        true,
+        false,
+        false,
         false,
         false,
         false,
@@ -48,8 +48,8 @@
       "name": "Leitura / Revisão da Faculdade (RI)",
       "category": "📚 Estudo",
       "days": [
-        true,
-        true,
+        false,
+        false,
         false,
         false,
         false,
@@ -62,9 +62,9 @@
       "name": "Sono Reparador (7h30+) & Mobilidade",
       "category": "🧘 Mente",
       "days": [
-        true,
-        true,
-        true,
+        false,
+        false,
+        false,
         false,
         false,
         false,
