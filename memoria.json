@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-14T14:04:46.968Z",
+  "updatedAt": "2026-10-14T14:04:50.915Z",
   "habits": [
     {
       "id": 1,
@@ -103,6 +103,20 @@
       "id": 1791986686164,
       "name": "Trabalho",
       "category": "💼 Carreira",
+      "days": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ]
+    },
+    {
+      "id": 1791986690108,
+      "name": "Aula",
+      "category": "📚 Estudo",
       "days": [
         false,
         false,
