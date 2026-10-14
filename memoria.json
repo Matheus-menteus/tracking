@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-14T14:04:50.915Z",
+  "updatedAt": "2026-10-14T14:04:59.378Z",
   "habits": [
     {
       "id": 1,
@@ -117,6 +117,20 @@
       "id": 1791986690108,
       "name": "Aula",
       "category": "📚 Estudo",
+      "days": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ]
+    },
+    {
+      "id": 1791986698573,
+      "name": "Academia",
+      "category": "🏃 Esporte",
       "days": [
         false,
         false,
