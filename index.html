@@ -35,18 +35,50 @@
       -webkit-tap-highlight-color: transparent;
     }
 
-    body {
+    html, body {
+      width: 100%;
+      max-width: 100vw;
+      overflow-x: hidden;
       background-color: var(--bg-primary);
       color: var(--text-primary);
       min-height: 100vh;
-      padding: env(safe-area-inset-top, 20px) 16px env(safe-area-inset-bottom, 40px);
-      line-height: 1.5;
+      line-height: 1.45;
+    }
+
+    body {
+      padding: calc(env(safe-area-inset-top, 16px) + 12px) 14px calc(env(safe-area-inset-bottom, 24px) + 24px);
+    }
+
+    /* Proteção visual para a barra de status do iOS ao rolar a página */
+    .ios-status-bar-shield {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: env(safe-area-inset-top, 0px);
+      background: rgba(15, 23, 42, 0.92);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      z-index: 999;
+      pointer-events: none;
     }
 
     .container {
-      max-width: 1200px;
+      width: 100%;
+      max-width: 1180px;
       margin: 0 auto;
-      padding-top: 8px;
+    }
+
+    /* Previne qualquer item de Grid ou Flex de estourar a largura da tela no celular */
+    .main-grid > *,
+    .history-layout > *,
+    .kpi-grid > *,
+    .category-cards-grid > *,
+    .card,
+    .kpi-card,
+    .cat-card {
+      min-width: 0;
+      max-width: 100%;
     }
 
     /* Header */
@@ -54,27 +86,33 @@
       display: flex;
       flex-wrap: wrap;
       justify-content: space-between;
-      align-items: center;
-      gap: 14px;
-      margin-bottom: 18px;
-      padding-bottom: 16px;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 16px;
+      padding-bottom: 14px;
       border-bottom: 1px solid var(--border);
     }
 
+    .header-title {
+      flex: 1 1 240px;
+      min-width: 0;
+    }
+
     .header-title h1 {
-      font-size: 1.5rem;
-      font-weight: 700;
+      font-size: 1.4rem;
+      font-weight: 800;
       letter-spacing: -0.02em;
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 8px;
       flex-wrap: wrap;
     }
 
     .header-title p {
       color: var(--text-secondary);
-      font-size: 0.88rem;
+      font-size: 0.84rem;
       margin-top: 4px;
+      word-wrap: break-word;
     }
 
     .header-actions {
@@ -82,21 +120,32 @@
       gap: 8px;
       align-items: center;
       flex-wrap: wrap;
+      width: 100%;
+    }
+
+    @media (min-width: 640px) {
+      .header-actions {
+        width: auto;
+      }
+      .header-title h1 {
+        font-size: 1.55rem;
+      }
     }
 
     .sync-badge {
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      padding: 6px 12px;
+      padding: 5px 11px;
       border-radius: 99px;
-      font-size: 0.76rem;
+      font-size: 0.75rem;
       font-weight: 600;
       border: 1px solid var(--border);
       background: #0f172a;
       color: var(--text-secondary);
       cursor: pointer;
       transition: all 0.2s;
+      max-width: 100%;
     }
 
     .sync-badge.synced {
@@ -121,9 +170,9 @@
       background: var(--bg-secondary);
       color: var(--text-primary);
       border: 1px solid var(--border);
-      padding: 9px 14px;
+      padding: 9px 13px;
       border-radius: 10px;
-      font-size: 0.83rem;
+      font-size: 0.82rem;
       font-weight: 600;
       cursor: pointer;
       transition: all 0.2s ease;
@@ -131,6 +180,7 @@
       align-items: center;
       justify-content: center;
       gap: 6px;
+      text-align: center;
     }
 
     .btn:hover {
@@ -158,50 +208,61 @@
       color: #fff;
     }
 
-    /* Main Navigation Tabs */
+    /* Main Navigation Tabs (Corrigido para nunca sobrepor no celular) */
     .nav-tabs {
-      display: flex;
-      gap: 8px;
-      margin-bottom: 22px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+      margin-bottom: 18px;
       background: #0b1120;
-      padding: 6px;
+      padding: 5px;
       border-radius: 12px;
       border: 1px solid var(--border);
-      overflow-x: auto;
+      width: 100%;
     }
 
     .nav-tab {
-      flex: 1;
-      min-width: 150px;
-      padding: 11px 16px;
+      padding: 10px 8px;
       border-radius: 9px;
-      border: none;
+      border: 1px solid transparent;
       background: transparent;
       color: var(--text-secondary);
-      font-size: 0.9rem;
+      font-size: 0.82rem;
       font-weight: 700;
       cursor: pointer;
       transition: all 0.2s;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 8px;
-      white-space: nowrap;
+      flex-wrap: wrap;
+      gap: 6px;
+      text-align: center;
+      line-height: 1.25;
+      min-width: 0;
+    }
+
+    @media (min-width: 640px) {
+      .nav-tab {
+        font-size: 0.9rem;
+        padding: 11px 16px;
+      }
     }
 
     .nav-tab.active {
       background: var(--bg-card);
       color: var(--accent);
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
-      border: 1px solid rgba(56, 189, 248, 0.35);
+      border-color: rgba(56, 189, 248, 0.35);
     }
 
     .tab-badge {
       background: rgba(56, 189, 248, 0.15);
       color: var(--accent);
-      padding: 2px 8px;
+      padding: 2px 7px;
       border-radius: 99px;
-      font-size: 0.74rem;
+      font-size: 0.7rem;
+      font-weight: 700;
+      white-space: nowrap;
     }
 
     /* Banner Virada Automática */
@@ -210,9 +271,9 @@
       background: rgba(16, 185, 129, 0.12);
       border: 1px solid rgba(16, 185, 129, 0.45);
       color: #d1fae5;
-      padding: 14px 18px;
+      padding: 14px;
       border-radius: 12px;
-      margin-bottom: 20px;
+      margin-bottom: 18px;
       align-items: center;
       justify-content: space-between;
       gap: 12px;
@@ -227,26 +288,14 @@
     .kpi-grid {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
-      gap: 14px;
-      margin-bottom: 22px;
+      gap: 12px;
+      margin-bottom: 18px;
     }
 
     @media (max-width: 900px) {
       .kpi-grid {
         grid-template-columns: repeat(2, 1fr);
-      }
-    }
-
-    @media (max-width: 420px) {
-      .kpi-grid {
-        grid-template-columns: repeat(2, 1fr);
         gap: 10px;
-      }
-      .kpi-card {
-        padding: 14px !important;
-      }
-      .kpi-value {
-        font-size: 1.5rem !important;
       }
     }
 
@@ -254,7 +303,7 @@
       background: var(--bg-card);
       border: 1px solid var(--border);
       border-radius: var(--radius);
-      padding: 18px;
+      padding: 14px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
@@ -262,23 +311,33 @@
 
     .kpi-label {
       color: var(--text-secondary);
-      font-size: 0.76rem;
+      font-size: 0.72rem;
       font-weight: 600;
       text-transform: uppercase;
-      letter-spacing: 0.04em;
+      letter-spacing: 0.03em;
     }
 
     .kpi-value {
-      font-size: 1.85rem;
+      font-size: 1.55rem;
       font-weight: 800;
       margin: 6px 0 4px;
       display: flex;
       align-items: baseline;
-      gap: 6px;
+      gap: 5px;
+      flex-wrap: wrap;
+    }
+
+    @media (min-width: 640px) {
+      .kpi-card {
+        padding: 18px;
+      }
+      .kpi-value {
+        font-size: 1.85rem;
+      }
     }
 
     .kpi-sub {
-      font-size: 0.78rem;
+      font-size: 0.74rem;
       color: var(--text-secondary);
     }
 
@@ -302,8 +361,8 @@
     .main-grid {
       display: grid;
       grid-template-columns: 1.15fr 0.85fr;
-      gap: 18px;
-      margin-bottom: 22px;
+      gap: 16px;
+      margin-bottom: 18px;
     }
 
     @media (max-width: 920px) {
@@ -316,54 +375,77 @@
       background: var(--bg-card);
       border: 1px solid var(--border);
       border-radius: var(--radius);
-      padding: 20px;
+      padding: 16px;
+      width: 100%;
+      overflow: hidden;
+    }
+
+    @media (min-width: 640px) {
+      .card {
+        padding: 20px;
+      }
     }
 
     .card-header {
       display: flex;
       justify-content: space-between;
-      align-items: center;
-      margin-bottom: 16px;
-      gap: 12px;
+      align-items: flex-start;
+      margin-bottom: 14px;
+      gap: 10px;
       flex-wrap: wrap;
     }
 
     .card-title {
-      font-size: 1.1rem;
+      font-size: 1.02rem;
       font-weight: 700;
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 6px;
+      line-height: 1.3;
     }
 
     .card-subtitle {
-      font-size: 0.82rem;
+      font-size: 0.78rem;
       color: var(--text-secondary);
+      margin-top: 2px;
     }
 
-    /* Day Selector */
+    /* Day Selector (7 dias ocupa 100% no celular sem cortar) */
     .day-selector {
-      display: flex;
-      gap: 4px;
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 3px;
       background: #0f172a;
       padding: 4px;
       border-radius: 10px;
       border: 1px solid var(--border);
-      overflow-x: auto;
-      max-width: 100%;
+      width: 100%;
+    }
+
+    @media (min-width: 640px) {
+      .day-selector {
+        width: auto;
+      }
     }
 
     .day-tab {
       background: transparent;
       border: none;
       color: var(--text-secondary);
-      padding: 6px 10px;
+      padding: 6px 2px;
       border-radius: 7px;
-      font-size: 0.8rem;
-      font-weight: 600;
+      font-size: 0.75rem;
+      font-weight: 700;
       cursor: pointer;
       transition: all 0.15s;
-      white-space: nowrap;
+      text-align: center;
+    }
+
+    @media (min-width: 640px) {
+      .day-tab {
+        padding: 6px 10px;
+        font-size: 0.8rem;
+      }
     }
 
     .day-tab.active {
@@ -375,7 +457,7 @@
     .add-habit-form {
       display: flex;
       gap: 8px;
-      margin-bottom: 18px;
+      margin-bottom: 16px;
       flex-wrap: wrap;
     }
 
@@ -383,16 +465,29 @@
       background: #0f172a;
       border: 1px solid var(--border);
       color: var(--text-primary);
-      padding: 11px 14px;
+      padding: 10px 12px;
       border-radius: 10px;
-      font-size: 0.9rem;
+      font-size: 0.88rem;
       outline: none;
       transition: border-color 0.2s;
+      max-width: 100%;
     }
 
     .input-field {
-      flex: 1;
-      min-width: 180px;
+      flex: 1 1 100%;
+    }
+
+    .select-field {
+      flex: 1 1 140px;
+    }
+
+    @media (min-width: 640px) {
+      .input-field {
+        flex: 1 1 200px;
+      }
+      .select-field {
+        flex: 0 0 auto;
+      }
     }
 
     .input-field:focus, .select-field:focus {
@@ -403,7 +498,7 @@
     .today-list {
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: 9px;
     }
 
     .habit-item {
@@ -413,8 +508,9 @@
       background: #0f172a;
       border: 1px solid var(--border);
       border-radius: 12px;
-      padding: 13px 14px;
+      padding: 12px;
       transition: all 0.2s ease;
+      gap: 8px;
     }
 
     .habit-item.completed {
@@ -425,23 +521,23 @@
     .habit-left {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
       cursor: pointer;
       flex: 1;
-      min-height: 36px;
+      min-width: 0;
     }
 
     .checkbox-custom {
-      width: 26px;
-      height: 26px;
-      border-radius: 8px;
+      width: 24px;
+      height: 24px;
+      border-radius: 7px;
       border: 2px solid var(--text-secondary);
       display: flex;
       align-items: center;
       justify-content: center;
       transition: all 0.2s ease;
       flex-shrink: 0;
-      font-size: 0.95rem;
+      font-size: 0.9rem;
       color: transparent;
     }
 
@@ -455,11 +551,14 @@
     .habit-info {
       display: flex;
       flex-direction: column;
+      min-width: 0;
+      flex: 1;
     }
 
     .habit-name {
       font-weight: 600;
-      font-size: 0.95rem;
+      font-size: 0.9rem;
+      word-wrap: break-word;
     }
 
     .habit-item.completed .habit-name {
@@ -468,25 +567,26 @@
     }
 
     .habit-meta {
-      font-size: 0.76rem;
+      font-size: 0.74rem;
       color: var(--text-secondary);
       display: flex;
       align-items: center;
       flex-wrap: wrap;
-      gap: 8px;
+      gap: 6px;
       margin-top: 3px;
     }
 
     .streak-pill {
       background: rgba(245, 158, 11, 0.15);
       color: #fbbf24;
-      padding: 2px 8px;
+      padding: 2px 7px;
       border-radius: 99px;
-      font-size: 0.74rem;
+      font-size: 0.72rem;
       font-weight: 700;
       display: inline-flex;
       align-items: center;
       gap: 4px;
+      white-space: nowrap;
     }
 
     .delete-btn {
@@ -494,10 +594,10 @@
       border: none;
       color: var(--text-secondary);
       cursor: pointer;
-      padding: 8px;
+      padding: 6px;
       border-radius: 8px;
-      font-size: 1rem;
-      transition: all 0.15s;
+      font-size: 0.95rem;
+      flex-shrink: 0;
     }
 
     .delete-btn:hover {
@@ -509,18 +609,18 @@
     .chart-container {
       display: flex;
       flex-direction: column;
-      height: 250px;
+      height: 230px;
       justify-content: flex-end;
-      padding-top: 14px;
+      padding-top: 12px;
     }
 
     .bars-wrapper {
       display: grid;
       grid-template-columns: repeat(7, 1fr);
-      gap: 10px;
+      gap: 6px;
       align-items: end;
-      height: 190px;
-      padding: 0 4px;
+      height: 175px;
+      padding: 0 2px;
       border-bottom: 1px solid var(--border);
     }
 
@@ -530,32 +630,32 @@
       align-items: center;
       height: 100%;
       justify-content: flex-end;
-      gap: 6px;
+      gap: 5px;
+      min-width: 0;
     }
 
     .bar-pct {
-      font-size: 0.74rem;
+      font-size: 0.68rem;
       font-weight: 700;
       color: var(--text-secondary);
     }
 
     .bar-track {
       width: 100%;
-      max-width: 40px;
-      height: 145px;
+      max-width: 34px;
+      height: 135px;
       background: #0f172a;
-      border-radius: 10px 10px 4px 4px;
+      border-radius: 8px 8px 4px 4px;
       display: flex;
       align-items: flex-end;
       overflow: hidden;
       border: 1px solid var(--border);
-      position: relative;
     }
 
     .bar-fill {
       width: 100%;
       background: linear-gradient(180deg, var(--accent), #0284c7);
-      border-radius: 8px 8px 0 0;
+      border-radius: 6px 6px 0 0;
       transition: height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
@@ -564,10 +664,10 @@
     }
 
     .bar-day {
-      font-size: 0.8rem;
+      font-size: 0.74rem;
       font-weight: 600;
       color: var(--text-secondary);
-      margin-top: 6px;
+      margin-top: 4px;
       text-align: center;
     }
 
@@ -577,73 +677,126 @@
     }
 
     .streak-banner {
-      margin-top: 14px;
+      margin-top: 12px;
       background: #0f172a;
       border: 1px solid var(--border);
       border-radius: 12px;
-      padding: 12px 14px;
+      padding: 10px 12px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      font-size: 0.84rem;
+      font-size: 0.8rem;
       gap: 8px;
       flex-wrap: wrap;
     }
 
-    /* Weekly Matrix Table */
-    .matrix-wrapper {
-      overflow-x: auto;
-      -webkit-overflow-scrolling: touch;
-    }
-
-    table {
+    /* =====================================================
+       MATRIZ SEMANAL RESPONSIVA (SEM CORTAR NO CELULAR!)
+       ===================================================== */
+    .responsive-matrix-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
       width: 100%;
-      border-collapse: collapse;
-      min-width: 580px;
     }
 
-    th, td {
-      padding: 11px 8px;
-      text-align: center;
-      border-bottom: 1px solid var(--border);
-    }
-
-    th:first-child, td:first-child {
-      text-align: left;
-      padding-left: 4px;
-    }
-
-    th {
-      color: var(--text-secondary);
-      font-size: 0.78rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-    }
-
-    th.today-col {
-      color: var(--accent);
-    }
-
-    .day-toggle {
-      width: 36px;
-      height: 36px;
-      border-radius: 9px;
-      border: 1px solid var(--border);
+    .matrix-row-card {
       background: #0f172a;
-      color: transparent;
-      cursor: pointer;
-      display: inline-flex;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    @media (min-width: 760px) {
+      .matrix-row-card {
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        padding: 12px 16px;
+      }
+    }
+
+    .matrix-row-info {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+      flex: 1;
+    }
+
+    .matrix-row-title {
+      font-weight: 600;
+      font-size: 0.9rem;
+      word-wrap: break-word;
+    }
+
+    .matrix-row-cat {
+      font-size: 0.74rem;
+      color: var(--text-secondary);
+      margin-top: 2px;
+    }
+
+    .matrix-days-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 5px;
+      width: 100%;
+    }
+
+    @media (min-width: 760px) {
+      .matrix-days-grid {
+        width: 340px;
+        flex-shrink: 0;
+      }
+    }
+
+    .day-cell-btn {
+      background: #1e293b;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 6px 2px;
+      display: flex;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
-      font-weight: 800;
-      transition: all 0.18s ease;
+      gap: 3px;
+      cursor: pointer;
+      color: var(--text-secondary);
+      transition: all 0.15s ease;
     }
 
-    .day-toggle.done {
-      background: var(--success);
+    .day-cell-btn .d-lbl {
+      font-size: 0.65rem;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .day-cell-btn .d-chk {
+      font-size: 0.8rem;
+      font-weight: 900;
+      height: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: transparent;
+    }
+
+    .day-cell-btn.done {
+      background: rgba(16, 185, 129, 0.18);
       border-color: var(--success);
-      color: #0f172a;
+      color: #fff;
+    }
+
+    .day-cell-btn.done .d-chk {
+      color: var(--success);
+    }
+
+    .day-cell-btn.today-highlight {
+      border-color: var(--accent);
     }
 
     /* ==========================================
@@ -651,9 +804,10 @@
        ========================================== */
     .history-layout {
       display: grid;
-      grid-template-columns: 330px 1fr;
-      gap: 20px;
+      grid-template-columns: 320px 1fr;
+      gap: 18px;
       align-items: start;
+      width: 100%;
     }
 
     @media (max-width: 920px) {
@@ -665,7 +819,8 @@
     .folder-tree {
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      gap: 10px;
+      width: 100%;
     }
 
     .month-folder {
@@ -673,36 +828,34 @@
       border: 1px solid var(--border);
       border-radius: 12px;
       overflow: hidden;
+      width: 100%;
     }
 
     .month-header {
-      padding: 13px 15px;
+      padding: 12px 14px;
       display: flex;
       justify-content: space-between;
       align-items: center;
       cursor: pointer;
       font-weight: 700;
-      font-size: 0.95rem;
+      font-size: 0.9rem;
       background: rgba(30, 41, 59, 0.6);
-      transition: background 0.2s;
       user-select: none;
-    }
-
-    .month-header:hover {
-      background: var(--bg-hover);
+      gap: 8px;
     }
 
     .month-header-left {
       display: flex;
       align-items: center;
-      gap: 9px;
+      gap: 8px;
+      min-width: 0;
     }
 
     .month-weeks {
       display: none;
       flex-direction: column;
       gap: 6px;
-      padding: 10px;
+      padding: 8px;
       border-top: 1px solid var(--border);
     }
 
@@ -714,18 +867,15 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 10px 12px;
+      padding: 10px;
       border-radius: 9px;
       background: var(--bg-card);
       border: 1px solid transparent;
       cursor: pointer;
       transition: all 0.15s;
-      font-size: 0.85rem;
-    }
-
-    .week-folder-item:hover {
-      border-color: var(--border);
-      transform: translateX(2px);
+      font-size: 0.82rem;
+      gap: 8px;
+      width: 100%;
     }
 
     .week-folder-item.active {
@@ -734,11 +884,12 @@
     }
 
     .week-pct-pill {
-      font-size: 0.76rem;
+      font-size: 0.74rem;
       font-weight: 800;
       padding: 3px 8px;
       border-radius: 99px;
       background: #0f172a;
+      flex-shrink: 0;
     }
 
     /* Gráficos de Categoria */
@@ -746,26 +897,30 @@
       display: flex;
       flex-direction: column;
       gap: 14px;
-      margin-top: 8px;
+      margin-top: 6px;
+      width: 100%;
     }
 
     .comp-bar-row {
       display: flex;
       flex-direction: column;
       gap: 6px;
+      width: 100%;
     }
 
     .comp-bar-top {
       display: flex;
       justify-content: space-between;
-      align-items: center;
-      font-size: 0.88rem;
+      align-items: flex-start;
+      font-size: 0.84rem;
       font-weight: 600;
+      gap: 8px;
+      flex-wrap: wrap;
     }
 
     .comp-bar-track {
       width: 100%;
-      height: 14px;
+      height: 12px;
       background: #0f172a;
       border-radius: 99px;
       overflow: hidden;
@@ -778,23 +933,31 @@
       transition: width 0.45s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
-    /* Grid de Categorias Individuais (Constância) */
+    /* Grid de Categorias Individuais (1 coluna no celular, 2 no PC) */
     .category-cards-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 16px;
-      margin-top: 18px;
+      grid-template-columns: 1fr;
+      gap: 14px;
+      margin-top: 14px;
+      width: 100%;
+    }
+
+    @media (min-width: 680px) {
+      .category-cards-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
     }
 
     .cat-card {
       background: #0f172a;
       border: 1px solid var(--border);
       border-radius: 13px;
-      padding: 16px;
+      padding: 14px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      gap: 14px;
+      gap: 12px;
+      width: 100%;
     }
 
     .cat-card-header {
@@ -802,48 +965,53 @@
       justify-content: space-between;
       align-items: flex-start;
       gap: 8px;
+      flex-wrap: wrap;
     }
 
     .cat-title {
       font-weight: 700;
-      font-size: 1rem;
+      font-size: 0.96rem;
     }
 
     .cat-badge {
-      font-size: 0.78rem;
+      font-size: 0.74rem;
       font-weight: 800;
-      padding: 3px 9px;
+      padding: 3px 8px;
       border-radius: 99px;
+      white-space: nowrap;
     }
 
-    /* Mini gráfico de evolução entre semanas da categoria */
     .mini-trend-box {
       background: rgba(30, 41, 59, 0.55);
       border: 1px solid var(--border);
       border-radius: 10px;
-      padding: 10px 10px 8px;
+      padding: 10px 8px 8px;
+      width: 100%;
     }
 
     .mini-trend-label {
-      font-size: 0.73rem;
+      font-size: 0.72rem;
       color: var(--text-secondary);
       font-weight: 600;
       margin-bottom: 8px;
       display: flex;
       justify-content: space-between;
+      gap: 6px;
     }
 
     .mini-bars-row {
       display: flex;
       align-items: flex-end;
-      gap: 8px;
-      height: 78px;
-      padding-top: 14px;
+      gap: 6px;
+      height: 76px;
+      padding-top: 12px;
       border-bottom: 1px solid var(--border);
+      width: 100%;
     }
 
     .mini-bar-col {
       flex: 1;
+      min-width: 0;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -853,15 +1021,15 @@
     }
 
     .mini-bar-val {
-      font-size: 0.66rem;
+      font-size: 0.64rem;
       color: var(--text-secondary);
       font-weight: 700;
     }
 
     .mini-bar-track {
       width: 100%;
-      max-width: 28px;
-      height: 48px;
+      max-width: 26px;
+      height: 46px;
       background: #0b1120;
       border-radius: 5px 5px 2px 2px;
       display: flex;
@@ -876,30 +1044,31 @@
     }
 
     .mini-bar-lbl {
-      font-size: 0.65rem;
+      font-size: 0.62rem;
       color: var(--text-secondary);
-      margin-top: 4px;
+      margin-top: 3px;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-      max-width: 54px;
+      max-width: 100%;
     }
 
-    /* Mini 7-day heatmap for the category in selected week */
     .cat-days-row {
       display: grid;
       grid-template-columns: repeat(7, 1fr);
-      gap: 5px;
+      gap: 4px;
+      width: 100%;
     }
 
     .cat-day-cell {
       background: #1e293b;
       border: 1px solid var(--border);
       border-radius: 7px;
-      padding: 5px 2px;
+      padding: 5px 1px;
       text-align: center;
-      font-size: 0.7rem;
+      font-size: 0.66rem;
       font-weight: 700;
+      min-width: 0;
     }
 
     /* Modal Styles */
@@ -912,7 +1081,7 @@
       align-items: center;
       justify-content: center;
       z-index: 1000;
-      padding: 16px;
+      padding: 14px;
     }
 
     .modal-backdrop.open {
@@ -923,9 +1092,9 @@
       background: var(--bg-card);
       border: 1px solid var(--border);
       border-radius: 16px;
-      max-width: 520px;
+      max-width: 500px;
       width: 100%;
-      padding: 24px;
+      padding: 20px;
       box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
       max-height: 90vh;
       overflow-y: auto;
@@ -935,24 +1104,24 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 14px;
+      margin-bottom: 12px;
     }
 
     .modal-header h2 {
-      font-size: 1.2rem;
+      font-size: 1.1rem;
       font-weight: 700;
     }
 
     .form-group {
-      margin-bottom: 14px;
+      margin-bottom: 12px;
     }
 
     .form-group label {
       display: block;
-      font-size: 0.82rem;
+      font-size: 0.8rem;
       font-weight: 600;
       color: var(--text-secondary);
-      margin-bottom: 6px;
+      margin-bottom: 5px;
     }
 
     .form-group input {
@@ -963,15 +1132,17 @@
       background: #0f172a;
       border: 1px solid var(--border);
       border-radius: 10px;
-      padding: 12px 14px;
-      font-size: 0.8rem;
+      padding: 12px;
+      font-size: 0.78rem;
       color: var(--text-secondary);
-      margin-bottom: 16px;
-      line-height: 1.55;
+      margin-bottom: 14px;
+      line-height: 1.5;
     }
   </style>
 </head>
 <body>
+  <div class="ios-status-bar-shield"></div>
+
   <div class="container">
     <header>
       <div class="header-title">
@@ -984,8 +1155,8 @@
         <p id="currentWeekSubtitle">Semana Atual • Sincronizado entre PC e Celular</p>
       </div>
       <div class="header-actions">
-        <button class="btn" onclick="manualPullFromGitHub()">🔄 Sincronizar</button>
-        <button class="btn" onclick="openSyncModal()">⚙️ Nuvem / Backup</button>
+        <button class="btn" style="flex:1;" onclick="manualPullFromGitHub()">🔄 Sincronizar</button>
+        <button class="btn" style="flex:1;" onclick="openSyncModal()">⚙️ Nuvem / Backup</button>
       </div>
     </header>
 
@@ -993,23 +1164,23 @@
     <div id="rolloverToast" class="rollover-toast">
       <div>
         <strong>🎉 Nova semana iniciada automaticamente!</strong>
-        <div style="font-size: 0.84rem; color: #a7f3d0;" id="rolloverToastText">
+        <div style="font-size: 0.82rem; color: #a7f3d0;" id="rolloverToastText">
           A semana anterior foi arquivada na pasta do mês no Histórico e os gráficos de categoria já estão prontos.
         </div>
       </div>
-      <div style="display:flex; gap:8px;">
-        <button class="btn btn-primary" onclick="switchMainTab('history')">📊 Ver Relatório da Semana</button>
+      <div style="display:flex; gap:8px; width:100%;">
+        <button class="btn btn-primary" style="flex:1;" onclick="switchMainTab('history')">📊 Ver Relatório</button>
         <button class="btn" onclick="document.getElementById('rolloverToast').classList.remove('show')">Fechar</button>
       </div>
     </div>
 
-    <!-- Navegação Principal: Semana Atual vs Histórico & Categorias -->
+    <!-- Navegação Principal (2 colunas perfeitamente alinhadas no celular) -->
     <div class="nav-tabs">
       <button class="nav-tab active" id="tabBtnCurrent" onclick="switchMainTab('current')">
-        ⚡ Semana Atual (Check-in Diário)
+        <span>⚡ Semana Atual</span>
       </button>
       <button class="nav-tab" id="tabBtnHistory" onclick="switchMainTab('history')">
-        📁 Histórico (Mês &rarr; Semana) & Constância por Categoria
+        <span>📁 Histórico & Categorias</span>
         <span class="tab-badge" id="historyCountBadge">1 sem</span>
       </button>
     </div>
@@ -1023,7 +1194,7 @@
           <span class="kpi-label" id="kpiDayLabel">Metas de Hoje</span>
           <div class="kpi-value">
             <span id="todayPct">0%</span>
-            <span style="font-size: 0.9rem; color: var(--text-secondary); font-weight: 600;" id="todayCount">(0/0)</span>
+            <span style="font-size: 0.82rem; color: var(--text-secondary); font-weight: 600;" id="todayCount">(0/0)</span>
           </div>
           <div class="progress-bar-bg">
             <div class="progress-bar-fill" id="todayProgressBar" style="width: 0%;"></div>
@@ -1031,15 +1202,15 @@
         </div>
 
         <div class="kpi-card">
-          <span class="kpi-label">Sequência Forte (≥75%)</span>
+          <span class="kpi-label">Sequência Forte</span>
           <div class="kpi-value" style="color: #fbbf24;">
-            🔥 <span id="currentStreak">0</span> <span style="font-size: 0.95rem; font-weight: 600;">dias</span>
+            🔥 <span id="currentStreak">0</span> <span style="font-size: 0.85rem; font-weight: 600;">dias</span>
           </div>
-          <span class="kpi-sub" id="bestStreakText">Melhor na semana: 0 dias</span>
+          <span class="kpi-sub" id="bestStreakText">Melhor: 0 dias</span>
         </div>
 
         <div class="kpi-card">
-          <span class="kpi-label">Consistência Semanal</span>
+          <span class="kpi-label">Média Semanal</span>
           <div class="kpi-value" style="color: var(--accent);">
             <span id="weeklyAvg">0%</span>
           </div>
@@ -1047,11 +1218,11 @@
         </div>
 
         <div class="kpi-card">
-          <span class="kpi-label">Categoria Destaque</span>
-          <div class="kpi-value" style="font-size: 1.15rem; color: var(--success); margin-top: 10px;" id="topHabitName">
+          <span class="kpi-label">Destaque</span>
+          <div class="kpi-value" style="font-size: 1.05rem; color: var(--success); margin-top: 8px;" id="topHabitName">
             —
           </div>
-          <span class="kpi-sub" id="topHabitStreak">0% concluído na semana</span>
+          <span class="kpi-sub" id="topHabitStreak">0% na semana</span>
         </div>
       </section>
 
@@ -1081,7 +1252,7 @@
               <option value="💼 Carreira">💼 Carreira</option>
               <option value="🧘 Mente">🧘 Mente</option>
             </select>
-            <button type="submit" class="btn btn-primary">+ Adicionar</button>
+            <button type="submit" class="btn btn-primary" style="flex:1;">+ Adicionar</button>
           </form>
 
           <div class="today-list" id="todayList"></div>
@@ -1101,34 +1272,27 @@
           </div>
 
           <div class="streak-banner">
-            <span>💡 Virada automática toda <strong>Segunda-feira</strong>!</span>
+            <span>💡 Virada automática toda <strong>Segunda</strong>!</span>
             <span id="perfectDaysBadge" style="color: var(--success); font-weight: 700;">0 dias 100%</span>
           </div>
         </div>
       </div>
 
-      <!-- Matriz da Semana -->
+      <!-- Matriz da Semana (100% responsiva sem estourar tela no celular) -->
       <div class="card">
         <div class="card-header">
           <div>
             <div class="card-title">🗓️ Matriz da Semana Atual</div>
-            <div class="card-subtitle">Clique em qualquer dia de Segunda a Domingo para ajustar</div>
+            <div class="card-subtitle">Toque em qualquer dia (Seg a Dom) para marcar ou desmarcar</div>
           </div>
-          <div style="display:flex; gap:8px; flex-wrap:wrap;">
-            <button class="btn" onclick="manualCloseWeekAndRollover()" title="Salva a semana atual no histórico e zera os checks para começar uma nova">
-              ⏭️ Arquivar & Virar Semana Agora
+          <div style="display:flex; gap:8px; flex-wrap:wrap; width:100%;">
+            <button class="btn" style="flex:1;" onclick="manualCloseWeekAndRollover()">
+              📊 Ver Relatório da Semana
             </button>
-            <button class="btn btn-danger" onclick="clearAllProgress()">🧹 Zerar Semana</button>
+            <button class="btn btn-danger" onclick="clearAllProgress()">🧹 Zerar</button>
           </div>
         </div>
-        <div class="matrix-wrapper">
-          <table>
-            <thead>
-              <tr id="matrixHeader"></tr>
-            </thead>
-            <tbody id="matrixBody"></tbody>
-          </table>
-        </div>
+        <div class="responsive-matrix-list" id="matrixBody"></div>
       </div>
     </div>
 
@@ -1148,9 +1312,9 @@
 
           <div class="folder-tree" id="folderTreeContainer"></div>
 
-          <div style="margin-top: 18px; padding-top: 14px; border-top: 1px solid var(--border); display:flex; flex-direction:column; gap:8px;">
+          <div style="margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--border); display:flex; flex-direction:column; gap:8px;">
             <button class="btn" onclick="generateSampleHistoryWeeks()" style="width:100%; font-size:0.78rem;">
-              🧪 Gerar Semanas Anteriores de Exemplo (Para testar gráficos)
+              🧪 Gerar Semanas Anteriores de Exemplo
             </button>
             <button class="btn btn-danger" onclick="clearSampleHistoryWeeks()" id="btnClearSamples" style="width:100%; font-size:0.78rem; display:none;">
               🗑️ Remover Semanas de Exemplo
@@ -1159,16 +1323,16 @@
         </div>
 
         <!-- Coluna Direita: Relatório da Semana Selecionada + Gráficos de Categorias -->
-        <div style="display: flex; flex-direction: column; gap: 18px;">
-          <!-- Card 1: Cabeçalho da Semana Selecionada & Comparativo entre Categorias -->
+        <div style="display: flex; flex-direction: column; gap: 16px; min-width: 0; width: 100%;">
+          <!-- Card 1: Comparativo entre Categorias -->
           <div class="card">
             <div class="card-header">
               <div>
-                <div class="card-title" id="histSelectedTitle">📊 Comparativo de Categorias da Semana</div>
-                <div class="card-subtitle" id="histSelectedSubtitle">Selecione uma semana na pasta ao lado</div>
+                <div class="card-title" id="histSelectedTitle">📊 Comparativo de Categorias</div>
+                <div class="card-subtitle" id="histSelectedSubtitle">Pasta selecionada</div>
               </div>
-              <span class="streak-pill" id="histOverallBadge" style="font-size: 0.88rem; padding: 5px 12px;">
-                Média Geral: 0%
+              <span class="streak-pill" id="histOverallBadge" style="font-size: 0.82rem; padding: 4px 10px;">
+                Média da Semana: 0%
               </span>
             </div>
 
@@ -1179,9 +1343,9 @@
           <div class="card">
             <div class="card-header">
               <div>
-                <div class="card-title">📈 Gráficos Individuais por Categoria (Constância)</div>
+                <div class="card-title">📈 Constância por Categoria</div>
                 <div class="card-subtitle">
-                  Acompanhe a evolução semanal de cada área e os dias cumpridos (Seg a Dom) na semana selecionada
+                  Evolução entre semanas e frequência diária (Seg a Dom)
                 </div>
               </div>
             </div>
@@ -1189,22 +1353,15 @@
             <div class="category-cards-grid" id="individualCategoryCharts"></div>
           </div>
 
-          <!-- Card 3: Registro Detalhado dos Hábitos daquela Semana -->
+          <!-- Card 3: Check-ins Arquivados na Semana (Sem cortar lateralmente!) -->
           <div class="card">
             <div class="card-header">
               <div>
                 <div class="card-title">📋 Check-ins Arquivados na Semana</div>
-                <div class="card-subtitle">Fotografia completa dos hábitos registrados nesta semana</div>
+                <div class="card-subtitle">Fotografia completa de Segunda a Domingo</div>
               </div>
             </div>
-            <div class="matrix-wrapper">
-              <table>
-                <thead>
-                  <tr id="histMatrixHeader"></tr>
-                </thead>
-                <tbody id="histMatrixBody"></tbody>
-              </table>
-            </div>
+            <div class="responsive-matrix-list" id="histMatrixBody"></div>
           </div>
         </div>
       </div>
@@ -1220,7 +1377,7 @@
       </div>
 
       <div class="help-box">
-        O arquivo <code>memoria.json</code> guarda tanto a sua <strong>Semana Atual</strong> quanto todo o seu <strong>Histórico de Meses e Semanas</strong>. Assim, seus relatórios de constância ficam iguais no PC e no celular!
+        O arquivo <code>memoria.json</code> guarda tanto a sua <strong>Semana Atual</strong> quanto todo o seu <strong>Histórico de Meses e Semanas</strong>.
       </div>
 
       <form onsubmit="saveGitHubConfig(event)">
@@ -1241,20 +1398,20 @@
           <input type="text" id="ghPath" class="input-field" value="memoria.json" required />
         </div>
 
-        <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 18px; flex-wrap: wrap;">
+        <div style="display: flex; gap: 8px; justify-content: flex-end; margin-top: 16px; flex-wrap: wrap;">
           <button type="button" class="btn btn-danger" onclick="disconnectGitHub()">Desconectar</button>
           <button type="submit" class="btn btn-primary">💾 Salvar & Sincronizar</button>
         </div>
       </form>
 
-      <hr style="border: none; border-top: 1px solid var(--border); margin: 20px 0;" />
+      <hr style="border: none; border-top: 1px solid var(--border); margin: 18px 0;" />
 
       <div>
-        <div style="font-size: 0.9rem; font-weight: 700; margin-bottom: 8px;">📦 Backup Manual (Arquivo JSON)</div>
-        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-          <button type="button" class="btn" onclick="exportJsonFile()">⬇️ Baixar memoria.json</button>
-          <label class="btn" style="cursor: pointer;">
-            ⬆️ Importar memoria.json
+        <div style="font-size: 0.85rem; font-weight: 700; margin-bottom: 8px;">📦 Backup Manual (Arquivo JSON)</div>
+        <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+          <button type="button" class="btn" style="flex:1;" onclick="exportJsonFile()">⬇️ Baixar JSON</button>
+          <label class="btn" style="flex:1; cursor: pointer;">
+            ⬆️ Importar JSON
             <input type="file" accept=".json" style="display:none;" onchange="importJsonFile(event)" />
           </label>
         </div>
@@ -1303,7 +1460,7 @@
       '🧘 Mente':    { color: '#ec4899', bg: 'rgba(236, 72, 153, 0.15)' }
     };
 
-    const STORAGE_KEY = 'painel_habitos_v2_data'; // Mantém a mesma chave para aproveitar dados salvos
+    const STORAGE_KEY = 'painel_habitos_v2_data';
     const GH_CONFIG_KEY = 'painel_habitos_v2_gh_config';
 
     const DEFAULT_HABITS = [
@@ -1314,11 +1471,10 @@
       { id: 5, name: 'Sono Reparador (7h30+) & Mobilidade', category: '🧘 Mente', days: [true, true, true, false, false, false, false] }
     ];
 
-    // Funções de Data e Identificação de Semana (Segunda-feira como início da semana)
     function getMondayDate(dateObj = new Date()) {
       const d = new Date(dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate());
       const day = d.getDay();
-      const diff = day === 0 ? -6 : 1 - day; // Ajuste para Segunda-feira
+      const diff = day === 0 ? -6 : 1 - day;
       d.setDate(d.getDate() + diff);
       return d;
     }
@@ -1376,7 +1532,6 @@
           history: {}
         };
       }
-      // Compatibilidade total com a v2 (onde era salvo apenas array ou { updatedAt, habits })
       if (Array.isArray(raw)) {
         return {
           updatedAt: new Date().toISOString(),
@@ -1408,7 +1563,6 @@
     function saveLocalState() {
       try {
         appState.updatedAt = new Date().toISOString();
-        // Atualiza também a fotografia da semana atual dentro do histórico ao vivo
         syncCurrentWeekToHistorySnapshot();
         localStorage.setItem(STORAGE_KEY, JSON.stringify(appState));
       } catch (e) {
@@ -1416,7 +1570,6 @@
       }
     }
 
-    // Cria um snapshot da semana com estatísticas prontas
     function createWeekSnapshot(weekKey, habitsList, isSample = false) {
       const meta = getWeekMetadata(weekKey);
       const clonedHabits = JSON.parse(JSON.stringify(habitsList));
@@ -1442,28 +1595,21 @@
       );
     }
 
-    // =====================================================
-    // 1. VIRADA AUTOMÁTICA DE SEMANA
-    // =====================================================
     function checkAndPerformAutoWeekRollover() {
       const actualWeekKey = formatDateKey(getMondayDate(new Date()));
       if (appState.currentWeekKey && appState.currentWeekKey < actualWeekKey) {
         const previousWeekKey = appState.currentWeekKey;
         const prevMeta = getWeekMetadata(previousWeekKey);
 
-        // 1. Arquiva a semana que acabou no histórico
         appState.history[previousWeekKey] = createWeekSnapshot(previousWeekKey, appState.habits, false);
 
-        // 2. Zera os checks diários para a semana nova mantendo os hábitos cadastrados
         appState.habits.forEach(h => {
           h.days = [false, false, false, false, false, false, false];
         });
 
-        // 3. Atualiza a chave para a semana atual
         appState.currentWeekKey = actualWeekKey;
         syncCurrentWeekToHistorySnapshot();
 
-        // 4. Seleciona a semana recém-fechada no relatório para o usuário poder ver os gráficos
         selectedHistoryWeekKey = previousWeekKey;
         openMonthFolders[prevMeta.monthKey] = true;
 
@@ -1482,27 +1628,13 @@
       return false;
     }
 
-    // Botão caso o usuário queira arquivar/fechar a semana manualmente a qualquer hora
     function manualCloseWeekAndRollover() {
-      const hasAnyCheck = appState.habits.some(h => h.days.some(Boolean));
-      if (!hasAnyCheck) {
-        alert('A semana atual já está zerada! Marque pelo menos um hábito antes de arquivar.');
-        return;
-      }
-      if (!confirm('Deseja salvar a fotografia da semana atual no Histórico, abrir o Relatório de Categorias e zerar as marcações para recomeçar?')) {
-        return;
-      }
-
-      // Se já houver registro na chave atual e o usuário quiser guardar como semana anterior separada, ou atualizar a atual:
       syncCurrentWeekToHistorySnapshot();
       selectedHistoryWeekKey = appState.currentWeekKey;
-
-      // Mostra a aba de histórico com os gráficos gerados da semana fechada!
       renderAll();
       switchMainTab('history');
     }
 
-    // Alternar entre Aba Principal e Aba de Histórico
     function switchMainTab(tab) {
       const vCurr = document.getElementById('viewCurrent');
       const vHist = document.getElementById('viewHistory');
@@ -1524,13 +1656,9 @@
       }
     }
 
-    // =====================================================
-    // CÁLCULO DE MÉTRICAS E CATEGORIAS
-    // =====================================================
     function computeWeekCategoryStats(habitsList) {
       const categoriesMap = {};
 
-      // Inicializa todas as categorias conhecidas que têm pelo menos 1 hábito
       habitsList.forEach(h => {
         const cat = h.category || '🏃 Esporte';
         if (!categoriesMap[cat]) {
@@ -1576,9 +1704,6 @@
       return Math.round((done / (habitsList.length * 7)) * 100);
     }
 
-    // =====================================================
-    // 2 & 3. RENDERIZAÇÃO DO HISTÓRICO (PASTAS MÊS -> SEMANA) E GRÁFICOS
-    // =====================================================
     function toggleMonthFolder(monthKey) {
       openMonthFolders[monthKey] = !openMonthFolders[monthKey];
       renderHistoryView();
@@ -1602,7 +1727,6 @@
         selectedHistoryWeekKey = appState.currentWeekKey;
       }
 
-      // Agrupa por Mês (Pasta de Mês -> Pasta de Semana)
       const monthsGroup = {};
       allWeeks.forEach(w => {
         const meta = getWeekMetadata(w.weekKey);
@@ -1634,7 +1758,7 @@
             <div class="month-header" onclick="toggleMonthFolder('${m.monthKey}')">
               <div class="month-header-left">
                 <span>${isOpen ? '📂' : '📁'}</span>
-                <span>${m.monthLabel}</span>
+                <span style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${m.monthLabel}</span>
               </div>
               <span class="tab-badge">${m.weeks.length} sem • ${monthAvg}%</span>
             </div>
@@ -1645,11 +1769,11 @@
                 const pillColor = w.overallPct >= 75 ? '#10b981' : (w.overallPct >= 50 ? '#38bdf8' : '#f59e0b');
                 return `
                   <div class="week-folder-item ${isSelected ? 'active' : ''}" onclick="selectHistoryWeek('${w.weekKey}')">
-                    <div>
-                      <div style="font-weight: 700; display:flex; align-items:center; gap:6px;">
-                        <span>📄 ${w.fullLabel}</span>
+                    <div style="min-width:0; flex:1;">
+                      <div style="font-weight: 700; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">
+                        📄 ${w.fullLabel}
                       </div>
-                      <div style="font-size: 0.74rem; color: var(--text-secondary); margin-top: 2px;">
+                      <div style="font-size: 0.72rem; color: var(--text-secondary); margin-top: 2px;">
                         ${isCurrent ? '🟢 Semana Atual (Ao vivo)' : (w.isSample ? '🧪 Semana de Exemplo' : '🔒 Semana Arquivada')}
                       </div>
                     </div>
@@ -1664,7 +1788,6 @@
         `;
       }).join('');
 
-      // Renderiza os gráficos da semana selecionada
       const selectedSnap = appState.history[selectedHistoryWeekKey];
       if (!selectedSnap) return;
 
@@ -1672,28 +1795,27 @@
       const overallPct = computeWeekOverallPct(selectedSnap.habits);
       const catStats = computeWeekCategoryStats(selectedSnap.habits);
 
-      document.getElementById('histSelectedTitle').textContent = `📊 Comparativo de Categorias — ${selMeta.fullLabel}`;
+      document.getElementById('histSelectedTitle').textContent = `📊 Categorias — ${selMeta.fullLabel}`;
       document.getElementById('histSelectedSubtitle').textContent = `Pasta: ${selMeta.monthLabel} > ${selMeta.fullLabel}`;
       document.getElementById('histOverallBadge').textContent = `Média da Semana: ${overallPct}%`;
 
-      // 1. Gráfico Comparativo entre Categorias
       const compEl = document.getElementById('categoryComparisonChart');
       if (catStats.length === 0) {
-        compEl.innerHTML = `<div style="color:var(--text-secondary); padding: 16px 0;">Nenhum hábito registrado nesta semana.</div>`;
+        compEl.innerHTML = `<div style="color:var(--text-secondary); padding: 12px 0;">Nenhum hábito registrado nesta semana.</div>`;
       } else {
         compEl.innerHTML = catStats.map(c => {
-          let statusLabel = '⚠️ Precisa de Foco';
+          let statusLabel = '⚠️ Foco';
           if (c.pct >= 80) statusLabel = '🔥 Excelente';
           else if (c.pct >= 60) statusLabel = '✅ Consistente';
           return `
             <div class="comp-bar-row">
               <div class="comp-bar-top">
-                <div style="display:flex; align-items:center; gap:8px;">
+                <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
                   <span>${c.category}</span>
-                  <span style="font-size:0.75rem; color:var(--text-secondary);">(${c.doneCheckins}/${c.possibleCheckins} check-ins • ${c.habitsCount} ${c.habitsCount === 1 ? 'meta' : 'metas'})</span>
+                  <span style="font-size:0.72rem; color:var(--text-secondary);">(${c.doneCheckins}/${c.possibleCheckins} • ${c.habitsCount} ${c.habitsCount === 1 ? 'meta' : 'metas'})</span>
                 </div>
-                <div style="display:flex; align-items:center; gap:10px;">
-                  <span style="font-size:0.75rem; color:var(--text-secondary);">${statusLabel}</span>
+                <div style="display:flex; align-items:center; gap:8px;">
+                  <span style="font-size:0.72rem; color:var(--text-secondary);">${statusLabel}</span>
                   <span style="color:${c.color}; font-weight:800;">${c.pct}%</span>
                 </div>
               </div>
@@ -1705,12 +1827,10 @@
         }).join('');
       }
 
-      // 2. Gráficos Individuais de Cada Categoria (Evolução entre Semanas + Constância Seg a Dom)
       const chronologicalWeeks = [...allWeeks].sort((a, b) => a.weekKey.localeCompare(b.weekKey)).slice(-6);
       const indContainer = document.getElementById('individualCategoryCharts');
 
       indContainer.innerHTML = catStats.map(c => {
-        // Calcula histórico dessa categoria ao longo das semanas salvas
         const weeklySeries = chronologicalWeeks.map(w => {
           const wMeta = getWeekMetadata(w.weekKey);
           const wCatHabits = (w.habits || []).filter(h => h.category === c.category);
@@ -1735,8 +1855,8 @@
               <div class="cat-card-header">
                 <div>
                   <div class="cat-title">${c.category}</div>
-                  <div style="font-size:0.76rem; color:var(--text-secondary); margin-top:2px;">
-                    Constância média no histórico: <strong style="color:var(--text-primary);">${avgMultiWeek}%</strong>
+                  <div style="font-size:0.74rem; color:var(--text-secondary); margin-top:2px;">
+                    Constância média: <strong style="color:var(--text-primary);">${avgMultiWeek}%</strong>
                   </div>
                 </div>
                 <span class="cat-badge" style="background:${c.bg}; color:${c.color};">
@@ -1744,15 +1864,14 @@
                 </span>
               </div>
 
-              <!-- Mini Gráfico de Evolução Semanal da Categoria -->
-              <div class="mini-trend-box" style="margin-top: 12px;">
+              <div class="mini-trend-box" style="margin-top: 10px;">
                 <div class="mini-trend-label">
-                  <span>Evolução Semanal (Constância)</span>
+                  <span>Evolução Semanal</span>
                   <span>Últimas ${weeklySeries.length} sem</span>
                 </div>
                 <div class="mini-bars-row">
                   ${weeklySeries.map(item => `
-                    <div class="mini-bar-col" onclick="selectHistoryWeek('${item.weekKey}')" style="cursor:pointer;" title="Clique para ver ${item.shortLabel}">
+                    <div class="mini-bar-col" onclick="selectHistoryWeek('${item.weekKey}')" style="cursor:pointer;">
                       <span class="mini-bar-val" style="${item.isSelected ? `color:${c.color};` : ''}">${item.pct}%</span>
                       <div class="mini-bar-track" style="${item.isSelected ? `border:1px solid ${c.color};` : ''}">
                         <div class="mini-bar-fill" style="height:${item.pct}%; background:${c.color}; opacity:${item.isSelected ? '1' : '0.55'};"></div>
@@ -1764,10 +1883,9 @@
               </div>
             </div>
 
-            <!-- Distribuição Diária (Seg a Dom) na Semana Selecionada -->
             <div>
-              <div style="font-size:0.74rem; color:var(--text-secondary); font-weight:600; margin-bottom:6px;">
-                Frequência Diária nesta Semana (Seg a Dom):
+              <div style="font-size:0.72rem; color:var(--text-secondary); font-weight:600; margin-bottom:5px;">
+                Frequência Diária (Seg a Dom):
               </div>
               <div class="cat-days-row">
                 ${DAYS.map((dName, dIdx) => {
@@ -1778,21 +1896,20 @@
                   return `
                     <div class="cat-day-cell" style="${activeStyle}">
                       <div>${dName}</div>
-                      <div style="font-size:0.65rem; margin-top:2px;">${dPct}%</div>
+                      <div style="font-size:0.62rem; margin-top:2px;">${dPct}%</div>
                     </div>
                   `;
                 }).join('')}
               </div>
             </div>
 
-            <!-- Hábitos da Categoria -->
-            <div style="border-top: 1px solid var(--border); padding-top: 10px; display:flex; flex-direction:column; gap:5px;">
+            <div style="border-top: 1px solid var(--border); padding-top: 8px; display:flex; flex-direction:column; gap:4px;">
               ${c.habits.map(h => {
                 const hDone = h.days.filter(Boolean).length;
                 return `
-                  <div style="display:flex; justify-content:space-between; font-size:0.78rem;">
-                    <span style="color:var(--text-secondary); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:75%;">${escapeHtml(h.name)}</span>
-                    <strong style="color:${c.color};">${hDone}/7d</strong>
+                  <div style="display:flex; justify-content:space-between; font-size:0.76rem; gap:8px;">
+                    <span style="color:var(--text-secondary); overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${escapeHtml(h.name)}</span>
+                    <strong style="color:${c.color}; flex-shrink:0;">${hDone}/7d</strong>
                   </div>
                 `;
               }).join('')}
@@ -1801,44 +1918,47 @@
         `;
       }).join('');
 
-      // 3. Tabela de Check-ins Arquivados da Semana Selecionada
-      const hHeader = document.getElementById('histMatrixHeader');
+      // Check-ins Arquivados na Semana (Layout em cartões de 7 colunas que nunca cortam no celular!)
       const hBody = document.getElementById('histMatrixBody');
-      hHeader.innerHTML = `
-        <th>Hábito / Meta</th>
-        ${DAYS.map(d => `<th>${d}</th>`).join('')}
-        <th>Total</th>
-      `;
+      const isViewingCurrentWeek = selectedHistoryWeekKey === appState.currentWeekKey;
+
       hBody.innerHTML = (selectedSnap.habits || []).map(h => {
         const doneCount = h.days.filter(Boolean).length;
         return `
-          <tr>
-            <td>
-              <div style="font-weight:600;">${escapeHtml(h.name)}</div>
-              <div style="font-size:0.75rem; color:var(--text-secondary);">${h.category}</div>
-            </td>
-            ${h.days.map(done => `
-              <td>
-                <span class="day-toggle ${done ? 'done' : ''}" style="cursor:default; width:30px; height:30px;">✓</span>
-              </td>
-            `).join('')}
-            <td><span class="streak-pill">${doneCount}/7</span></td>
-          </tr>
+          <div class="matrix-row-card">
+            <div class="matrix-row-info">
+              <div style="min-width:0;">
+                <div class="matrix-row-title">${escapeHtml(h.name)}</div>
+                <div class="matrix-row-cat">${h.category}</div>
+              </div>
+              <span class="streak-pill">${doneCount}/7 dias</span>
+            </div>
+            <div class="matrix-days-grid">
+              ${DAYS.map((dName, dIdx) => {
+                const done = h.days[dIdx];
+                const clickAttr = isViewingCurrentWeek ? `onclick="toggleHabitDay(${h.id}, ${dIdx})"` : `style="cursor:default;"`;
+                return `
+                  <button type="button" class="day-cell-btn ${done ? 'done' : ''}" ${clickAttr}>
+                    <span class="d-lbl">${dName}</span>
+                    <span class="d-chk">✓</span>
+                  </button>
+                `;
+              }).join('')}
+            </div>
+          </div>
         `;
       }).join('');
     }
 
-    // Função para gerar semanas anteriores de exemplo caso o usuário queira visualizar o histórico populado imediatamente
     function generateSampleHistoryWeeks() {
       const currMonday = parseDateKey(appState.currentWeekKey);
-      const sampleOffsets = [-7, -14, -21, -28]; // 4 semanas anteriores (cobrindo mês atual e mês anterior)
+      const sampleOffsets = [-7, -14, -21, -28];
 
       sampleOffsets.forEach((offsetDays, idx) => {
         const d = new Date(currMonday.getFullYear(), currMonday.getMonth(), currMonday.getDate() + offsetDays);
         const wKey = formatDateKey(d);
         if (!appState.history[wKey]) {
           const simulatedHabits = appState.habits.map((h, hIdx) => {
-            // Gera padrões realistas variados por semana e categoria
             const days = DAYS.map((_, dayIdx) => {
               const seed = (idx * 3 + hIdx * 5 + dayIdx * 2) % 10;
               return seed < (6 + (idx % 3));
@@ -1866,9 +1986,6 @@
       renderHistoryView();
     }
 
-    // =====================================================
-    // GITHUB CLOUD SYNC (v3 compatível com v2)
-    // =====================================================
     function loadGhConfig() {
       try {
         const saved = localStorage.getItem(GH_CONFIG_KEY);
@@ -1909,7 +2026,7 @@
         return;
       }
 
-      setSyncStatus('syncing', '⏳ Sincronizando GitHub...');
+      setSyncStatus('syncing', '⏳ Sincronizando...');
       const url = `https://api.github.com/repos/${ghConfig.owner}/${ghConfig.repo}/contents/${ghConfig.path}?t=${Date.now()}`;
 
       try {
@@ -1932,7 +2049,6 @@
         const decoded = JSON.parse(base64ToUtf8(data.content));
         appState = normalizeState(decoded);
 
-        // Verifica se houve virada automática de semana após baixar da nuvem
         checkAndPerformAutoWeekRollover();
         saveLocalState();
         renderAll();
@@ -1949,7 +2065,7 @@
       saveLocalState();
       if (!isGhConfigured()) return;
 
-      setSyncStatus('syncing', '⏳ Salvando no GitHub...');
+      setSyncStatus('syncing', '⏳ Salvando...');
       if (pushTimeout) clearTimeout(pushTimeout);
       pushTimeout = setTimeout(() => {
         pushToGitHubNow();
@@ -1960,7 +2076,7 @@
       if (!isGhConfigured()) return;
 
       const apiUrl = `https://api.github.com/repos/${ghConfig.owner}/${ghConfig.repo}/contents/${ghConfig.path}`;
-      setSyncStatus('syncing', '⏳ Gravando no repositório...');
+      setSyncStatus('syncing', '⏳ Gravando...');
 
       try {
         if (!lastFileSha) {
@@ -2005,10 +2121,10 @@
         const putData = await putRes.json();
         lastFileSha = putData.content.sha;
         const nowStr = new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
-        setSyncStatus('synced', `✅ Salvo no GitHub (${nowStr})`);
+        setSyncStatus('synced', `✅ Salvo (${nowStr})`);
       } catch (err) {
         console.error('Erro ao salvar no GitHub:', err);
-        setSyncStatus('error', '⚠️ Falha ao salvar no GitHub');
+        setSyncStatus('error', '⚠️ Falha ao salvar');
       }
     }
 
@@ -2082,9 +2198,6 @@
       reader.readAsText(file);
     }
 
-    // =====================================================
-    // AÇÕES E RENDERIZAÇÃO DA SEMANA ATUAL
-    // =====================================================
     function calculateHabitStreak(daysArr) {
       let current = 0;
       let max = 0;
@@ -2159,7 +2272,7 @@
     function renderTodayChecklist() {
       const list = document.getElementById('todayList');
       if (appState.habits.length === 0) {
-        list.innerHTML = `<div style="text-align:center; padding: 28px; color: var(--text-secondary);">Nenhum hábito cadastrado. Adicione sua primeira meta acima!</div>`;
+        list.innerHTML = `<div style="text-align:center; padding: 24px; color: var(--text-secondary);">Nenhum hábito cadastrado. Adicione sua primeira meta acima!</div>`;
         return;
       }
 
@@ -2225,7 +2338,7 @@
         }
       }
       document.getElementById('currentStreak').textContent = currentStreak;
-      document.getElementById('bestStreakText').textContent = `Melhor na semana: ${bestStreak} dias`;
+      document.getElementById('bestStreakText').textContent = `Melhor: ${bestStreak} dias`;
 
       const totalCheckins = habits.reduce((acc, h) => acc + h.days.filter(Boolean).length, 0);
       const maxCheckins = totalHabits * 7;
@@ -2237,10 +2350,10 @@
       if (catStats.length > 0 && catStats[0].doneCheckins > 0) {
         const topCat = catStats[0];
         document.getElementById('topHabitName').textContent = topCat.category;
-        document.getElementById('topHabitStreak').textContent = `${topCat.pct}% concluído (${topCat.doneCheckins}/${topCat.possibleCheckins})`;
+        document.getElementById('topHabitStreak').textContent = `${topCat.pct}% (${topCat.doneCheckins}/${topCat.possibleCheckins})`;
       } else {
         document.getElementById('topHabitName').textContent = '—';
-        document.getElementById('topHabitStreak').textContent = '0% concluído na semana';
+        document.getElementById('topHabitStreak').textContent = '0% na semana';
       }
 
       const chartBars = document.getElementById('chartBars');
@@ -2269,39 +2382,36 @@
     }
 
     function renderMatrix() {
-      const header = document.getElementById('matrixHeader');
       const body = document.getElementById('matrixBody');
 
-      header.innerHTML = `
-        <th>Hábito / Meta</th>
-        ${DAYS.map((d, idx) => `<th class="${idx === selectedDayIndex ? 'today-col' : ''}">${d}</th>`).join('')}
-        <th>Seq.</th>
-      `;
-
       if (appState.habits.length === 0) {
-        body.innerHTML = `<tr><td colspan="9" style="text-align:center; color: var(--text-secondary); padding: 20px;">Adicione metas acima para visualizar a matriz semanal.</td></tr>`;
+        body.innerHTML = `<div style="text-align:center; color: var(--text-secondary); padding: 18px;">Adicione metas acima para visualizar a matriz semanal.</div>`;
         return;
       }
 
       body.innerHTML = appState.habits.map(h => {
         const streak = calculateHabitStreak(h.days);
         return `
-          <tr>
-            <td>
-              <div style="font-weight: 600;">${escapeHtml(h.name)}</div>
-              <div style="font-size: 0.75rem; color: var(--text-secondary);">${h.category}</div>
-            </td>
-            ${h.days.map((done, dIdx) => `
-              <td>
-                <button class="day-toggle ${done ? 'done' : ''}" onclick="toggleHabitDay(${h.id}, ${dIdx})">
-                  ✓
-                </button>
-              </td>
-            `).join('')}
-            <td>
-              <span class="streak-pill">🔥 ${streak}d</span>
-            </td>
-          </tr>
+          <div class="matrix-row-card">
+            <div class="matrix-row-info">
+              <div style="min-width:0;">
+                <div class="matrix-row-title">${escapeHtml(h.name)}</div>
+                <div class="matrix-row-cat">${h.category}</div>
+              </div>
+              <span class="streak-pill">🔥 Seq: ${streak}d</span>
+            </div>
+            <div class="matrix-days-grid">
+              ${DAYS.map((dName, dIdx) => {
+                const done = h.days[dIdx];
+                return `
+                  <button type="button" class="day-cell-btn ${done ? 'done' : ''} ${dIdx === selectedDayIndex ? 'today-highlight' : ''}" onclick="toggleHabitDay(${h.id}, ${dIdx})">
+                    <span class="d-lbl">${dName}</span>
+                    <span class="d-chk">✓</span>
+                  </button>
+                `;
+              }).join('')}
+            </div>
+          </div>
         `;
       }).join('');
     }
@@ -2340,7 +2450,6 @@
       }
     });
 
-    // Inicialização
     checkAndPerformAutoWeekRollover();
     renderAll();
     if (isGhConfigured()) {
