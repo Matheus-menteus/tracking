@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-14T14:05:07.177Z",
+  "updatedAt": "2026-10-14T14:05:10.228Z",
   "habits": [
     {
       "id": 1,
@@ -21,7 +21,7 @@
       "category": "💧 Saúde",
       "days": [
         false,
-        false,
+        true,
         false,
         false,
         false,
@@ -35,7 +35,7 @@
       "category": "💧 Saúde",
       "days": [
         false,
-        false,
+        true,
         false,
         false,
         false,
@@ -49,7 +49,7 @@
       "category": "💧 Saúde",
       "days": [
         false,
-        false,
+        true,
         false,
         false,
         false,
