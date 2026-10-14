@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-14T14:04:39.861Z",
+  "updatedAt": "2026-10-14T14:04:46.968Z",
   "habits": [
     {
       "id": 1,
@@ -89,6 +89,20 @@
       "id": 1791986679057,
       "name": "Creatina",
       "category": "💧 Saúde",
+      "days": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ]
+    },
+    {
+      "id": 1791986686164,
+      "name": "Trabalho",
+      "category": "💼 Carreira",
       "days": [
         false,
         false,
