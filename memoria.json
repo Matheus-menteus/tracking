@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-14T14:05:14.082Z",
+  "updatedAt": "2026-10-14T14:05:16.031Z",
   "habits": [
     {
       "id": 1,
@@ -133,7 +133,7 @@
       "category": "🏃 Esporte",
       "days": [
         false,
-        false,
+        true,
         false,
         false,
         false,
