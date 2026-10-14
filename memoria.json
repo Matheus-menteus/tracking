@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-14T14:05:16.031Z",
+  "updatedAt": "2026-10-14T14:05:30.487Z",
   "habits": [
     {
       "id": 1,
@@ -22,7 +22,7 @@
       "days": [
         false,
         true,
-        false,
+        true,
         false,
         false,
         false,
