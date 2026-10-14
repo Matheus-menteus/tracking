@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-14T14:05:12.187Z",
+  "updatedAt": "2026-10-14T14:05:14.082Z",
   "habits": [
     {
       "id": 1,
@@ -105,7 +105,7 @@
       "category": "💼 Carreira",
       "days": [
         false,
-        false,
+        true,
         false,
         false,
         false,
@@ -119,7 +119,7 @@
       "category": "📚 Estudo",
       "days": [
         false,
-        false,
+        true,
         false,
         false,
         false,
