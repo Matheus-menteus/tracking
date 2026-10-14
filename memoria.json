@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-14T14:19:37.084Z",
+  "updatedAt": "2026-10-14T14:26:12.467Z",
   "currentWeekKey": "2026-10-12",
   "habits": [
     {
@@ -141,6 +141,20 @@
         false,
         false
       ]
+    },
+    {
+      "id": 1791987972463,
+      "name": "Dia sem doce!!!!!",
+      "category": "💧 Saúde",
+      "days": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ]
     }
   ],
   "history": {
@@ -152,7 +166,7 @@
       "shortLabel": "Sem 2 (12/10)",
       "fullLabel": "Semana 2 (12/10 a 18/10)",
       "rangeLabel": "12/10 a 18/10",
-      "archivedAt": "2026-10-14T14:19:37.888Z",
+      "archivedAt": "2026-10-14T14:26:13.268Z",
       "isSample": false,
       "habits": [
         {
@@ -288,6 +302,20 @@
           "days": [
             false,
             true,
+            false,
+            false,
+            false,
+            false,
+            false
+          ]
+        },
+        {
+          "id": 1791987972463,
+          "name": "Dia sem doce!!!!!",
+          "category": "💧 Saúde",
+          "days": [
+            false,
+            false,
             false,
             false,
             false,
