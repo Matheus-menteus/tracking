@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-14T14:04:17.488Z",
+  "updatedAt": "2026-10-14T14:04:31.786Z",
   "habits": [
     {
       "id": 1,
@@ -60,6 +60,20 @@
     {
       "id": 1791986656684,
       "name": "Janta",
+      "category": "💧 Saúde",
+      "days": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ]
+    },
+    {
+      "id": 1791986670983,
+      "name": "Água (mínimo 3L)",
       "category": "💧 Saúde",
       "days": [
         false,
