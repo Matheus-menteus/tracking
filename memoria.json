@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-14T14:04:31.786Z",
+  "updatedAt": "2026-10-14T14:04:39.861Z",
   "habits": [
     {
       "id": 1,
@@ -74,6 +74,20 @@
     {
       "id": 1791986670983,
       "name": "Água (mínimo 3L)",
+      "category": "💧 Saúde",
+      "days": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ]
+    },
+    {
+      "id": 1791986679057,
+      "name": "Creatina",
       "category": "💧 Saúde",
       "days": [
         false,
