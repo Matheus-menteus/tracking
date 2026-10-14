@@ -1,0 +1,1420 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta name="theme-color" content="#0f172a" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Meus Hábitos" />
+  <title>Painel de Hábitos & Nuvem GitHub</title>
+  <style>
+    :root {
+      --bg-primary: #0f172a;
+      --bg-secondary: #1e293b;
+      --bg-card: #1e293b;
+      --bg-hover: #334155;
+      --text-primary: #f8fafc;
+      --text-secondary: #94a3b8;
+      --accent: #38bdf8;
+      --accent-hover: #0284c7;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --border: #334155;
+      --radius: 14px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background-color: var(--bg-primary);
+      color: var(--text-primary);
+      min-height: 100vh;
+      padding: env(safe-area-inset-top, 20px) 18px env(safe-area-inset-bottom, 32px);
+      line-height: 1.5;
+    }
+
+    .container {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding-top: 8px;
+    }
+
+    /* Header */
+    header {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 22px;
+      padding-bottom: 18px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .header-title h1 {
+      font-size: 1.55rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .header-title p {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      margin-top: 4px;
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .sync-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 12px;
+      border-radius: 99px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      border: 1px solid var(--border);
+      background: #0f172a;
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .sync-badge.synced {
+      border-color: rgba(16, 185, 129, 0.45);
+      color: #34d399;
+      background: rgba(16, 185, 129, 0.1);
+    }
+
+    .sync-badge.syncing {
+      border-color: rgba(245, 158, 11, 0.5);
+      color: #fbbf24;
+      background: rgba(245, 158, 11, 0.1);
+    }
+
+    .sync-badge.error {
+      border-color: rgba(239, 68, 68, 0.5);
+      color: #f87171;
+      background: rgba(239, 68, 68, 0.1);
+    }
+
+    .btn {
+      background: var(--bg-secondary);
+      color: var(--text-primary);
+      border: 1px solid var(--border);
+      padding: 9px 14px;
+      border-radius: 10px;
+      font-size: 0.84rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .btn:hover {
+      background: var(--bg-hover);
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #0f172a;
+      border-color: var(--accent);
+    }
+
+    .btn-primary:hover {
+      background: var(--accent-hover);
+      color: #fff;
+    }
+
+    .btn-danger {
+      color: #fca5a5;
+      border-color: #7f1d1d;
+    }
+
+    .btn-danger:hover {
+      background: #7f1d1d;
+      color: #fff;
+    }
+
+    /* KPI Grid */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+      margin-bottom: 22px;
+    }
+
+    @media (max-width: 900px) {
+      .kpi-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 420px) {
+      .kpi-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+      }
+      .kpi-card {
+        padding: 14px !important;
+      }
+      .kpi-value {
+        font-size: 1.55rem !important;
+      }
+    }
+
+    .kpi-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .kpi-label {
+      color: var(--text-secondary);
+      font-size: 0.78rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .kpi-value {
+      font-size: 1.9rem;
+      font-weight: 800;
+      margin: 6px 0 4px;
+      display: flex;
+      align-items: baseline;
+      gap: 6px;
+    }
+
+    .kpi-sub {
+      font-size: 0.78rem;
+      color: var(--text-secondary);
+    }
+
+    .progress-bar-bg {
+      width: 100%;
+      height: 8px;
+      background: #0f172a;
+      border-radius: 99px;
+      margin-top: 8px;
+      overflow: hidden;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent), var(--success));
+      border-radius: 99px;
+      transition: width 0.35s ease;
+    }
+
+    /* Main Grid */
+    .main-grid {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 18px;
+      margin-bottom: 22px;
+    }
+
+    @media (max-width: 920px) {
+      .main-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .card-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .card-subtitle {
+      font-size: 0.82rem;
+      color: var(--text-secondary);
+    }
+
+    /* Day Selector */
+    .day-selector {
+      display: flex;
+      gap: 4px;
+      background: #0f172a;
+      padding: 4px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      overflow-x: auto;
+      max-width: 100%;
+    }
+
+    .day-tab {
+      background: transparent;
+      border: none;
+      color: var(--text-secondary);
+      padding: 6px 10px;
+      border-radius: 7px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s;
+      white-space: nowrap;
+    }
+
+    .day-tab.active {
+      background: var(--accent);
+      color: #0f172a;
+    }
+
+    /* Add Habit Form */
+    .add-habit-form {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 18px;
+      flex-wrap: wrap;
+    }
+
+    .input-field, .select-field {
+      background: #0f172a;
+      border: 1px solid var(--border);
+      color: var(--text-primary);
+      padding: 11px 14px;
+      border-radius: 10px;
+      font-size: 0.9rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .input-field {
+      flex: 1;
+      min-width: 180px;
+    }
+
+    .input-field:focus, .select-field:focus {
+      border-color: var(--accent);
+    }
+
+    /* Today's Checklist */
+    .today-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .habit-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #0f172a;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 13px 14px;
+      transition: all 0.2s ease;
+    }
+
+    .habit-item.completed {
+      border-color: rgba(16, 185, 129, 0.45);
+      background: rgba(16, 185, 129, 0.08);
+    }
+
+    .habit-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      cursor: pointer;
+      flex: 1;
+      min-height: 36px;
+    }
+
+    .checkbox-custom {
+      width: 26px;
+      height: 26px;
+      border-radius: 8px;
+      border: 2px solid var(--text-secondary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+      flex-shrink: 0;
+      font-size: 0.95rem;
+      color: transparent;
+    }
+
+    .habit-item.completed .checkbox-custom {
+      background: var(--success);
+      border-color: var(--success);
+      color: #0f172a;
+      font-weight: 900;
+    }
+
+    .habit-info {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .habit-name {
+      font-weight: 600;
+      font-size: 0.95rem;
+      transition: color 0.2s;
+    }
+
+    .habit-item.completed .habit-name {
+      text-decoration: line-through;
+      color: var(--text-secondary);
+    }
+
+    .habit-meta {
+      font-size: 0.76rem;
+      color: var(--text-secondary);
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 3px;
+    }
+
+    .streak-pill {
+      background: rgba(245, 158, 11, 0.15);
+      color: #fbbf24;
+      padding: 2px 8px;
+      border-radius: 99px;
+      font-size: 0.74rem;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .delete-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-secondary);
+      cursor: pointer;
+      padding: 8px;
+      border-radius: 8px;
+      font-size: 1rem;
+      transition: all 0.15s;
+    }
+
+    .delete-btn:hover {
+      color: var(--danger);
+      background: rgba(239, 68, 68, 0.12);
+    }
+
+    /* Chart Area */
+    .chart-container {
+      display: flex;
+      flex-direction: column;
+      height: 260px;
+      justify-content: flex-end;
+      padding-top: 16px;
+    }
+
+    .bars-wrapper {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 10px;
+      align-items: end;
+      height: 195px;
+      padding: 0 4px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .bar-col {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      height: 100%;
+      justify-content: flex-end;
+      gap: 6px;
+    }
+
+    .bar-pct {
+      font-size: 0.74rem;
+      font-weight: 700;
+      color: var(--text-secondary);
+    }
+
+    .bar-track {
+      width: 100%;
+      max-width: 40px;
+      height: 150px;
+      background: #0f172a;
+      border-radius: 10px 10px 4px 4px;
+      display: flex;
+      align-items: flex-end;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      position: relative;
+    }
+
+    .bar-fill {
+      width: 100%;
+      background: linear-gradient(180deg, var(--accent), #0284c7);
+      border-radius: 8px 8px 0 0;
+      transition: height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .bar-fill.perfect {
+      background: linear-gradient(180deg, #34d399, var(--success));
+    }
+
+    .bar-day {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      margin-top: 6px;
+      text-align: center;
+    }
+
+    .bar-day.active-day {
+      color: var(--accent);
+      font-weight: 800;
+    }
+
+    .streak-banner {
+      margin-top: 14px;
+      background: #0f172a;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.84rem;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    /* Weekly Matrix Table */
+    .matrix-wrapper {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 580px;
+    }
+
+    th, td {
+      padding: 11px 8px;
+      text-align: center;
+      border-bottom: 1px solid var(--border);
+    }
+
+    th:first-child, td:first-child {
+      text-align: left;
+      padding-left: 4px;
+    }
+
+    th {
+      color: var(--text-secondary);
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    th.today-col {
+      color: var(--accent);
+    }
+
+    .day-toggle {
+      width: 36px;
+      height: 36px;
+      border-radius: 9px;
+      border: 1px solid var(--border);
+      background: #0f172a;
+      color: transparent;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      transition: all 0.18s ease;
+    }
+
+    .day-toggle:hover {
+      border-color: var(--accent);
+    }
+
+    .day-toggle.done {
+      background: var(--success);
+      border-color: var(--success);
+      color: #0f172a;
+    }
+
+    /* Modal Styles */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(2, 6, 23, 0.78);
+      backdrop-filter: blur(4px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      padding: 16px;
+    }
+
+    .modal-backdrop.open {
+      display: flex;
+    }
+
+    .modal-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      max-width: 520px;
+      width: 100%;
+      padding: 24px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+    }
+
+    .modal-header h2 {
+      font-size: 1.2rem;
+      font-weight: 700;
+    }
+
+    .form-group {
+      margin-bottom: 14px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      margin-bottom: 6px;
+    }
+
+    .form-group input {
+      width: 100%;
+    }
+
+    .help-box {
+      background: #0f172a;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px 14px;
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      margin-bottom: 16px;
+      line-height: 1.55;
+    }
+
+    .help-box ol {
+      padding-left: 18px;
+      margin-top: 6px;
+    }
+
+    .help-box code {
+      color: var(--accent);
+      background: rgba(56, 189, 248, 0.1);
+      padding: 1px 5px;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="header-title">
+        <h1>
+          ⚡ Painel de Hábitos
+          <span id="syncBadge" class="sync-badge" onclick="openSyncModal()" title="Clique para configurar a memória no GitHub">
+            ☁️ Configurar GitHub Sync
+          </span>
+        </h1>
+        <p>Suas metas diárias e sequência semanal sincronizadas entre PC e Celular.</p>
+      </div>
+      <div class="header-actions">
+        <button class="btn" onclick="manualPullFromGitHub()" id="btnPullNow" title="Buscar última memória salva no GitHub">
+          🔄 Sincronizar Agora
+        </button>
+        <button class="btn" onclick="openSyncModal()">⚙️ Nuvem / Backup</button>
+        <button class="btn btn-danger" onclick="clearAllProgress()">🧹 Zerar Semana</button>
+      </div>
+    </header>
+
+    <!-- KPI Cards -->
+    <section class="kpi-grid">
+      <div class="kpi-card">
+        <span class="kpi-label" id="kpiDayLabel">Metas de Hoje</span>
+        <div class="kpi-value">
+          <span id="todayPct">0%</span>
+          <span style="font-size: 0.9rem; color: var(--text-secondary); font-weight: 600;" id="todayCount">(0/0)</span>
+        </div>
+        <div class="progress-bar-bg">
+          <div class="progress-bar-fill" id="todayProgressBar" style="width: 0%;"></div>
+        </div>
+      </div>
+
+      <div class="kpi-card">
+        <span class="kpi-label">Sequência Forte (≥75%)</span>
+        <div class="kpi-value" style="color: #fbbf24;">
+          🔥 <span id="currentStreak">0</span> <span style="font-size: 0.95rem; font-weight: 600;">dias</span>
+        </div>
+        <span class="kpi-sub" id="bestStreakText">Melhor na semana: 0 dias</span>
+      </div>
+
+      <div class="kpi-card">
+        <span class="kpi-label">Consistência Semanal</span>
+        <div class="kpi-value" style="color: var(--accent);">
+          <span id="weeklyAvg">0%</span>
+        </div>
+        <span class="kpi-sub" id="weeklyCheckins">0/0 check-ins</span>
+      </div>
+
+      <div class="kpi-card">
+        <span class="kpi-label">Mais Consistente</span>
+        <div class="kpi-value" style="font-size: 1.15rem; color: var(--success); margin-top: 10px;" id="topHabitName">
+          —
+        </div>
+        <span class="kpi-sub" id="topHabitStreak">0/7 dias concluídos</span>
+      </div>
+    </section>
+
+    <!-- Main Content: Daily Goals + Weekly Chart -->
+    <div class="main-grid">
+      <!-- Left: Daily Goals Registration & Checklist -->
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title">🎯 Metas Diárias</div>
+            <div class="card-subtitle">Toque para concluir ou adicione novas metas</div>
+          </div>
+          <div class="day-selector" id="daySelector"></div>
+        </div>
+
+        <form class="add-habit-form" onsubmit="addHabit(event)">
+          <input
+            type="text"
+            id="habitInput"
+            class="input-field"
+            placeholder="Nova meta (ex: Treino de Corrida, Francês 15m...)"
+            required
+          />
+          <select id="habitCategory" class="select-field">
+            <option value="🏃 Esporte">🏃 Esporte</option>
+            <option value="💧 Saúde">💧 Saúde</option>
+            <option value="📚 Estudo">📚 Estudo</option>
+            <option value="💼 Carreira">💼 Carreira</option>
+            <option value="🧘 Mente">🧘 Mente</option>
+          </select>
+          <button type="submit" class="btn btn-primary">+ Adicionar</button>
+        </form>
+
+        <div class="today-list" id="todayList"></div>
+      </div>
+
+      <!-- Right: Weekly Streak Chart -->
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title">📊 Gráfico de Sequência Semanal</div>
+            <div class="card-subtitle">Toque nas barras para alternar o dia visualizado</div>
+          </div>
+        </div>
+
+        <div class="chart-container">
+          <div class="bars-wrapper" id="chartBars"></div>
+        </div>
+
+        <div class="streak-banner">
+          <span>💡 Dias com <strong>100%</strong> ficam verdes!</span>
+          <span id="perfectDaysBadge" style="color: var(--success); font-weight: 700;">0 dias 100%</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom: Full Weekly Matrix -->
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <div class="card-title">🗓️ Matriz da Semana Completa</div>
+          <div class="card-subtitle">Visão geral de Segunda a Domingo</div>
+        </div>
+        <button class="btn" onclick="resetDemoData()" style="font-size:0.78rem; padding: 6px 10px;">
+          🔄 Restaurar Metas Padrão
+        </button>
+      </div>
+      <div class="matrix-wrapper">
+        <table>
+          <thead>
+            <tr id="matrixHeader"></tr>
+          </thead>
+          <tbody id="matrixBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: GitHub Cloud Memory & Backup -->
+  <div class="modal-backdrop" id="syncModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2>☁️ Memória no Repositório GitHub</h2>
+        <button class="delete-btn" onclick="closeSyncModal()">✕</button>
+      </div>
+
+      <div class="help-box">
+        <strong>Como funciona:</strong> O painel cria e atualiza automaticamente um arquivo chamado <code>memoria.json</code> dentro do seu próprio repositório no GitHub. Assim, sempre que você abrir no <strong>celular</strong> ou no <strong>PC</strong>, ele carrega a última memória salva!
+        <ol>
+          <li>No GitHub, acesse <strong>Settings &rarr; Developer settings &rarr; Personal access tokens &rarr; Fine-grained tokens</strong> (ou Classic).</li>
+          <li>Crie um token com permissão de leitura e escrita em <code>Contents</code> (ou marque <code>repo</code> no token Classic).</li>
+          <li>Cole os dados abaixo (eles ficam salvos apenas no seu aparelho e nunca ficam expostos no código público).</li>
+        </ol>
+      </div>
+
+      <form onsubmit="saveGitHubConfig(event)">
+        <div class="form-group">
+          <label>Seu Usuário do GitHub (Owner)</label>
+          <input type="text" id="ghOwner" class="input-field" placeholder="ex: seu-usuario" required />
+        </div>
+        <div class="form-group">
+          <label>Nome do Repositório</label>
+          <input type="text" id="ghRepo" class="input-field" placeholder="ex: habitos" required />
+        </div>
+        <div class="form-group">
+          <label>Token de Acesso Pessoal (GitHub PAT)</label>
+          <input type="password" id="ghToken" class="input-field" placeholder="ghp_xxxxxxxxxxxx ou github_pat_xxxx" required />
+        </div>
+        <div class="form-group">
+          <label>Nome do Arquivo de Memória no Repositório</label>
+          <input type="text" id="ghPath" class="input-field" value="memoria.json" required />
+        </div>
+
+        <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 18px; flex-wrap: wrap;">
+          <button type="button" class="btn btn-danger" onclick="disconnectGitHub()">Desconectar</button>
+          <button type="submit" class="btn btn-primary">💾 Salvar & Sincronizar</button>
+        </div>
+      </form>
+
+      <hr style="border: none; border-top: 1px solid var(--border); margin: 20px 0;" />
+
+      <div>
+        <div style="font-size: 0.9rem; font-weight: 700; margin-bottom: 8px;">📦 Backup Manual (Arquivo JSON)</div>
+        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+          <button type="button" class="btn" onclick="exportJsonFile()">⬇️ Baixar memoria.json</button>
+          <label class="btn" style="cursor: pointer;">
+            ⬆️ Importar memoria.json
+            <input type="file" accept=".json" style="display:none;" onchange="importJsonFile(event)" />
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Configura Web App Manifest dinâmico para instalar como App no celular (PWA)
+    (function setupPWA() {
+      const iconSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120"><rect width="120" height="120" rx="26" fill="#0f172a"/><path d="M68 18L30 68h28l-6 34 38-50H62l6-34z" fill="#38bdf8"/></svg>`;
+      const iconUrl = "data:image/svg+xml;base64," + btoa(iconSvg);
+
+      const appleIcon = document.createElement("link");
+      appleIcon.rel = "apple-touch-icon";
+      appleIcon.href = iconUrl;
+      document.head.appendChild(appleIcon);
+
+      const manifest = {
+        name: "Painel de Hábitos & Sequência",
+        short_name: "Hábitos",
+        start_url: ".",
+        display: "standalone",
+        background_color: "#0f172a",
+        theme_color: "#0f172a",
+        icons: [{ src: iconUrl, sizes: "192x192 512x512", type: "image/svg+xml" }]
+      };
+      const manifestBlob = new Blob([JSON.stringify(manifest)], { type: "application/json" });
+      const manifestLink = document.createElement("link");
+      manifestLink.rel = "manifest";
+      manifestLink.href = URL.createObjectURL(manifestBlob);
+      document.head.appendChild(manifestLink);
+    })();
+
+    const DAYS = ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'];
+    const STORAGE_KEY = 'painel_habitos_v2_data';
+    const GH_CONFIG_KEY = 'painel_habitos_v2_gh_config';
+
+    const jsDay = new Date().getDay();
+    const todayIndex = jsDay === 0 ? 6 : jsDay - 1;
+    let selectedDayIndex = todayIndex;
+
+    const DEFAULT_HABITS = [
+      { id: 1, name: 'Treino do Dia (Swim / Bike / Run)', category: '🏃 Esporte', days: [true, true, true, false, false, false, false] },
+      { id: 2, name: 'Hidratação (3L) + Eletrólitos / Suplementos', category: '💧 Saúde', days: [true, true, true, false, false, false, false] },
+      { id: 3, name: 'Prática de Idiomas (Francês / Espanhol 15m)', category: '📚 Estudo', days: [true, false, true, false, false, false, false] },
+      { id: 4, name: 'Leitura / Revisão da Faculdade (RI)', category: '📚 Estudo', days: [true, true, false, false, false, false, false] },
+      { id: 5, name: 'Sono Reparador (7h30+) & Mobilidade', category: '🧘 Mente', days: [true, true, true, false, false, false, false] }
+    ];
+
+    let habits = loadLocalHabits();
+    let ghConfig = loadGhConfig();
+    let lastFileSha = null;
+    let pushTimeout = null;
+
+    function loadLocalHabits() {
+      try {
+        const saved = localStorage.getItem(STORAGE_KEY);
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          if (Array.isArray(parsed)) return parsed;
+          if (parsed && Array.isArray(parsed.habits)) return parsed.habits;
+        }
+      } catch (e) {
+        console.warn('Erro ao ler localStorage:', e);
+      }
+      return JSON.parse(JSON.stringify(DEFAULT_HABITS));
+    }
+
+    function saveLocalHabits() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify({
+          updatedAt: new Date().toISOString(),
+          habits
+        }));
+      } catch (e) {
+        console.warn('Erro ao salvar localStorage:', e);
+      }
+    }
+
+    function loadGhConfig() {
+      try {
+        const saved = localStorage.getItem(GH_CONFIG_KEY);
+        if (saved) return JSON.parse(saved);
+      } catch (e) {}
+
+      // Auto-detecta usuário e repositório se estiver hospedado no GitHub Pages (*.github.io)
+      let autoOwner = '';
+      let autoRepo = '';
+      if (window.location.hostname.endsWith('.github.io')) {
+        autoOwner = window.location.hostname.replace('.github.io', '');
+        const pathParts = window.location.pathname.split('/').filter(Boolean);
+        if (pathParts.length > 0) autoRepo = pathParts[0];
+      }
+      return { owner: autoOwner, repo: autoRepo, token: '', path: 'memoria.json' };
+    }
+
+    function isGhConfigured() {
+      return Boolean(ghConfig && ghConfig.owner && ghConfig.repo && ghConfig.token);
+    }
+
+    function setSyncStatus(state, message) {
+      const badge = document.getElementById('syncBadge');
+      badge.className = 'sync-badge ' + (state || '');
+      badge.innerHTML = message;
+    }
+
+    // Funções de codificação UTF-8 <-> Base64 para a API do GitHub
+    function utf8ToBase64(str) {
+      return btoa(unescape(encodeURIComponent(str)));
+    }
+
+    function base64ToUtf8(b64) {
+      return decodeURIComponent(escape(atob(b64.replace(/\s/g, ''))));
+    }
+
+    // Busca a memória diretamente da API do repositório GitHub
+    async function pullFromGitHub(silent = false) {
+      if (!isGhConfigured()) {
+        setSyncStatus('', '☁️ Configurar GitHub Sync');
+        return;
+      }
+
+      setSyncStatus('syncing', '⏳ Carregando memória do GitHub...');
+      const url = `https://api.github.com/repos/${ghConfig.owner}/${ghConfig.repo}/contents/${ghConfig.path}?t=${Date.now()}`;
+
+      try {
+        const res = await fetch(url, {
+          headers: {
+            'Authorization': `Bearer ${ghConfig.token}`,
+            'Accept': 'application/vnd.github.v3+json'
+          }
+        });
+
+        if (res.status === 404) {
+          // Arquivo memoria.json ainda não existe no repositório; cria automaticamente!
+          await pushToGitHubNow();
+          return;
+        }
+
+        if (!res.ok) {
+          throw new Error(`HTTP ${res.status}`);
+        }
+
+        const data = await res.json();
+        lastFileSha = data.sha;
+        const decoded = JSON.parse(base64ToUtf8(data.content));
+        if (Array.isArray(decoded)) {
+          habits = decoded;
+        } else if (decoded && Array.isArray(decoded.habits)) {
+          habits = decoded.habits;
+        }
+
+        saveLocalHabits();
+        renderAll();
+        const nowStr = new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+        setSyncStatus('synced', `✅ Sincronizado (${nowStr})`);
+      } catch (err) {
+        console.error('Erro ao buscar memória no GitHub:', err);
+        setSyncStatus('error', '⚠️ Erro no GitHub Sync (Verifique Token/Repo)');
+      }
+    }
+
+    // Agenda o envio para o GitHub (aguarda 800ms para agrupar cliques rápidos em um único commit)
+    function schedulePushToGitHub() {
+      saveLocalHabits();
+      if (!isGhConfigured()) return;
+
+      setSyncStatus('syncing', '⏳ Salvando no GitHub...');
+      if (pushTimeout) clearTimeout(pushTimeout);
+      pushTimeout = setTimeout(() => {
+        pushToGitHubNow();
+      }, 800);
+    }
+
+    async function pushToGitHubNow(retry = false) {
+      if (!isGhConfigured()) return;
+
+      const apiUrl = `https://api.github.com/repos/${ghConfig.owner}/${ghConfig.repo}/contents/${ghConfig.path}`;
+      setSyncStatus('syncing', '⏳ Gravando no repositório...');
+
+      try {
+        // Se ainda não temos o SHA do arquivo atual, consulta primeiro
+        if (!lastFileSha) {
+          const checkRes = await fetch(`${apiUrl}?t=${Date.now()}`, {
+            headers: {
+              'Authorization': `Bearer ${ghConfig.token}`,
+              'Accept': 'application/vnd.github.v3+json'
+            }
+          });
+          if (checkRes.ok) {
+            const checkData = await checkRes.json();
+            lastFileSha = checkData.sha;
+          }
+        }
+
+        const payloadObj = {
+          updatedAt: new Date().toISOString(),
+          habits: habits
+        };
+        const contentBase64 = utf8ToBase64(JSON.stringify(payloadObj, null, 2));
+
+        const body = {
+          message: `🔄 Atualização de hábitos (${new Date().toLocaleString('pt-BR')})`,
+          content: contentBase64
+        };
+        if (lastFileSha) body.sha = lastFileSha;
+
+        const putRes = await fetch(apiUrl, {
+          method: 'PUT',
+          headers: {
+            'Authorization': `Bearer ${ghConfig.token}`,
+            'Accept': 'application/vnd.github.v3+json',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(body)
+        });
+
+        // Se outro dispositivo salvou antes (409 Conflict), atualiza o SHA e tenta mais uma vez
+        if (putRes.status === 409 && !retry) {
+          lastFileSha = null;
+          return await pushToGitHubNow(true);
+        }
+
+        if (!putRes.ok) {
+          throw new Error(`HTTP ${putRes.status}`);
+        }
+
+        const putData = await putRes.json();
+        lastFileSha = putData.content.sha;
+        const nowStr = new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+        setSyncStatus('synced', `✅ Salvo no GitHub (${nowStr})`);
+      } catch (err) {
+        console.error('Erro ao salvar no GitHub:', err);
+        setSyncStatus('error', '⚠️ Falha ao salvar no GitHub');
+      }
+    }
+
+    function manualPullFromGitHub() {
+      if (!isGhConfigured()) {
+        openSyncModal();
+        return;
+      }
+      pullFromGitHub();
+    }
+
+    // Modal de Configuração
+    function openSyncModal() {
+      document.getElementById('ghOwner').value = ghConfig.owner || '';
+      document.getElementById('ghRepo').value = ghConfig.repo || '';
+      document.getElementById('ghToken').value = ghConfig.token || '';
+      document.getElementById('ghPath').value = ghConfig.path || 'memoria.json';
+      document.getElementById('syncModal').classList.add('open');
+    }
+
+    function closeSyncModal() {
+      document.getElementById('syncModal').classList.remove('open');
+    }
+
+    async function saveGitHubConfig(event) {
+      event.preventDefault();
+      ghConfig = {
+        owner: document.getElementById('ghOwner').value.trim(),
+        repo: document.getElementById('ghRepo').value.trim(),
+        token: document.getElementById('ghToken').value.trim(),
+        path: document.getElementById('ghPath').value.trim() || 'memoria.json'
+      };
+      localStorage.setItem(GH_CONFIG_KEY, JSON.stringify(ghConfig));
+      lastFileSha = null;
+      closeSyncModal();
+      await pullFromGitHub();
+    }
+
+    function disconnectGitHub() {
+      localStorage.removeItem(GH_CONFIG_KEY);
+      ghConfig = { owner: '', repo: '', token: '', path: 'memoria.json' };
+      lastFileSha = null;
+      setSyncStatus('', '☁️ Configurar GitHub Sync');
+      closeSyncModal();
+    }
+
+    // Exportar / Importar arquivo manual
+    function exportJsonFile() {
+      const dataStr = JSON.stringify({ updatedAt: new Date().toISOString(), habits }, null, 2);
+      const blob = new Blob([dataStr], { type: 'application/json' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'memoria.json';
+      a.click();
+    }
+
+    function importJsonFile(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        try {
+          const parsed = JSON.parse(e.target.result);
+          if (Array.isArray(parsed)) {
+            habits = parsed;
+          } else if (parsed && Array.isArray(parsed.habits)) {
+            habits = parsed.habits;
+          }
+          renderAll();
+          schedulePushToGitHub();
+          closeSyncModal();
+        } catch (err) {
+          alert('Arquivo JSON inválido.');
+        }
+      };
+      reader.readAsText(file);
+    }
+
+    // Lógica dos Hábitos
+    function calculateHabitStreak(daysArr) {
+      let current = 0;
+      let max = 0;
+      for (let i = 0; i < 7; i++) {
+        if (daysArr[i]) {
+          current++;
+          if (current > max) max = current;
+        } else {
+          current = 0;
+        }
+      }
+      return max;
+    }
+
+    function selectDay(idx) {
+      selectedDayIndex = idx;
+      renderAll();
+    }
+
+    function toggleHabitDay(habitId, dayIdx) {
+      const habit = habits.find(h => h.id === habitId);
+      if (habit) {
+        habit.days[dayIdx] = !habit.days[dayIdx];
+        renderAll();
+        schedulePushToGitHub();
+      }
+    }
+
+    function addHabit(event) {
+      event.preventDefault();
+      const input = document.getElementById('habitInput');
+      const category = document.getElementById('habitCategory').value;
+      const name = input.value.trim();
+      if (!name) return;
+
+      habits.push({
+        id: Date.now(),
+        name,
+        category,
+        days: [false, false, false, false, false, false, false]
+      });
+
+      input.value = '';
+      renderAll();
+      schedulePushToGitHub();
+    }
+
+    function deleteHabit(habitId) {
+      habits = habits.filter(h => h.id !== habitId);
+      renderAll();
+      schedulePushToGitHub();
+    }
+
+    function clearAllProgress() {
+      habits.forEach(h => {
+        h.days = [false, false, false, false, false, false, false];
+      });
+      renderAll();
+      schedulePushToGitHub();
+    }
+
+    function resetDemoData() {
+      habits = JSON.parse(JSON.stringify(DEFAULT_HABITS));
+      renderAll();
+      schedulePushToGitHub();
+    }
+
+    function renderDaySelector() {
+      const container = document.getElementById('daySelector');
+      container.innerHTML = DAYS.map((d, idx) => `
+        <button class="day-tab ${idx === selectedDayIndex ? 'active' : ''}" onclick="selectDay(${idx})">
+          ${d}${idx === todayIndex ? '•' : ''}
+        </button>
+      `).join('');
+    }
+
+    function renderTodayChecklist() {
+      const list = document.getElementById('todayList');
+      if (habits.length === 0) {
+        list.innerHTML = `<div style="text-align:center; padding: 28px; color: var(--text-secondary);">Nenhum hábito cadastrado. Adicione sua primeira meta acima!</div>`;
+        return;
+      }
+
+      list.innerHTML = habits.map(h => {
+        const isDone = h.days[selectedDayIndex];
+        const streak = calculateHabitStreak(h.days);
+        const totalDone = h.days.filter(Boolean).length;
+        return `
+          <div class="habit-item ${isDone ? 'completed' : ''}">
+            <div class="habit-left" onclick="toggleHabitDay(${h.id}, ${selectedDayIndex})">
+              <div class="checkbox-custom">✓</div>
+              <div class="habit-info">
+                <span class="habit-name">${escapeHtml(h.name)}</span>
+                <div class="habit-meta">
+                  <span>${h.category}</span>
+                  <span>•</span>
+                  <span>${totalDone}/7 na semana</span>
+                  <span class="streak-pill">🔥 Seq: ${streak}d</span>
+                </div>
+              </div>
+            </div>
+            <button class="delete-btn" title="Excluir meta" onclick="deleteHabit(${h.id})">✕</button>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function renderChartAndKPIs() {
+      const totalHabits = habits.length;
+      const dailyPcts = DAYS.map((_, dayIdx) => {
+        if (totalHabits === 0) return 0;
+        const completed = habits.filter(h => h.days[dayIdx]).length;
+        return Math.round((completed / totalHabits) * 100);
+      });
+
+      const completedSelected = habits.filter(h => h.days[selectedDayIndex]).length;
+      const selectedPct = dailyPcts[selectedDayIndex];
+      document.getElementById('kpiDayLabel').textContent = `Metas de ${DAYS[selectedDayIndex]} ${selectedDayIndex === todayIndex ? '(Hoje)' : ''}`;
+      document.getElementById('todayPct').textContent = `${selectedPct}%`;
+      document.getElementById('todayCount').textContent = `(${completedSelected}/${totalHabits})`;
+      document.getElementById('todayProgressBar').style.width = `${selectedPct}%`;
+
+      let currentStreak = 0;
+      let bestStreak = 0;
+      let rolling = 0;
+      for (let i = 0; i < 7; i++) {
+        if (totalHabits > 0 && dailyPcts[i] >= 75) {
+          rolling++;
+          if (rolling > bestStreak) bestStreak = rolling;
+        } else {
+          rolling = 0;
+        }
+      }
+      for (let i = selectedDayIndex; i >= 0; i--) {
+        if (totalHabits > 0 && dailyPcts[i] >= 75) {
+          currentStreak++;
+        } else {
+          break;
+        }
+      }
+      document.getElementById('currentStreak').textContent = currentStreak;
+      document.getElementById('bestStreakText').textContent = `Melhor na semana: ${bestStreak} dias`;
+
+      const totalCheckins = habits.reduce((acc, h) => acc + h.days.filter(Boolean).length, 0);
+      const maxCheckins = totalHabits * 7;
+      const weeklyAvg = maxCheckins > 0 ? Math.round((totalCheckins / maxCheckins) * 100) : 0;
+      document.getElementById('weeklyAvg').textContent = `${weeklyAvg}%`;
+      document.getElementById('weeklyCheckins').textContent = `${totalCheckins}/${maxCheckins} check-ins`;
+
+      if (totalHabits > 0) {
+        const sorted = [...habits].sort((a, b) => b.days.filter(Boolean).length - a.days.filter(Boolean).length);
+        const top = sorted[0];
+        const topCount = top.days.filter(Boolean).length;
+        document.getElementById('topHabitName').textContent = topCount > 0 ? top.name : 'Nenhum ainda';
+        document.getElementById('topHabitStreak').textContent = `${topCount}/7 dias (Seq: ${calculateHabitStreak(top.days)}d)`;
+      } else {
+        document.getElementById('topHabitName').textContent = '—';
+        document.getElementById('topHabitStreak').textContent = '0/7 dias concluídos';
+      }
+
+      const chartBars = document.getElementById('chartBars');
+      let perfectDays = 0;
+      chartBars.innerHTML = DAYS.map((day, idx) => {
+        const pct = dailyPcts[idx];
+        const isPerfect = totalHabits > 0 && pct === 100;
+        if (isPerfect) perfectDays++;
+        return `
+          <div class="bar-col" onclick="selectDay(${idx})" style="cursor:pointer;">
+            <span class="bar-pct">${pct}%</span>
+            <div class="bar-track">
+              <div class="bar-fill ${isPerfect ? 'perfect' : ''}" style="height: ${pct}%;"></div>
+            </div>
+            <span class="bar-day ${idx === selectedDayIndex ? 'active-day' : ''}">
+              ${day}${idx === todayIndex ? '*' : ''}
+            </span>
+          </div>
+        `;
+      }).join('');
+
+      document.getElementById('perfectDaysBadge').textContent = `${perfectDays} ${perfectDays === 1 ? 'dia 100%' : 'dias 100%'}`;
+    }
+
+    function renderMatrix() {
+      const header = document.getElementById('matrixHeader');
+      const body = document.getElementById('matrixBody');
+
+      header.innerHTML = `
+        <th>Hábito / Meta</th>
+        ${DAYS.map((d, idx) => `<th class="${idx === selectedDayIndex ? 'today-col' : ''}">${d}</th>`).join('')}
+        <th>Seq.</th>
+      `;
+
+      if (habits.length === 0) {
+        body.innerHTML = `<tr><td colspan="9" style="text-align:center; color: var(--text-secondary); padding: 20px;">Adicione metas acima para visualizar a matriz semanal.</td></tr>`;
+        return;
+      }
+
+      body.innerHTML = habits.map(h => {
+        const streak = calculateHabitStreak(h.days);
+        return `
+          <tr>
+            <td>
+              <div style="font-weight: 600;">${escapeHtml(h.name)}</div>
+              <div style="font-size: 0.75rem; color: var(--text-secondary);">${h.category}</div>
+            </td>
+            ${h.days.map((done, dIdx) => `
+              <td>
+                <button class="day-toggle ${done ? 'done' : ''}" onclick="toggleHabitDay(${h.id}, ${dIdx})">
+                  ✓
+                </button>
+              </td>
+            `).join('')}
+            <td>
+              <span class="streak-pill">🔥 ${streak}d</span>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function escapeHtml(str) {
+      return str.replace(/[&<>"']/g, function(m) {
+        return ({
+          '&': '&amp;',
+          '<': '&lt;',
+          '>': '&gt;',
+          '"': '&quot;',
+          "'": '&#039;'
+        })[m];
+      });
+    }
+
+    function renderAll() {
+      renderDaySelector();
+      renderTodayChecklist();
+      renderChartAndKPIs();
+      renderMatrix();
+    }
+
+    // Sincroniza automaticamente sempre que você abre o app ou volta para a aba no celular/PC
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'visible' && isGhConfigured()) {
+        pullFromGitHub(true);
+      }
+    });
+
+    // Inicialização
+    renderAll();
+    if (isGhConfigured()) {
+      pullFromGitHub(true);
+    }
+  </script>
+</body>
+</html>
