@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-14T14:03:47.946Z",
+  "updatedAt": "2026-10-14T14:04:00.991Z",
   "habits": [
     {
       "id": 1,
@@ -9,6 +9,20 @@
         false,
         false,
         true,
+        false,
+        false,
+        false,
+        false
+      ]
+    },
+    {
+      "id": 1791986640188,
+      "name": "Café da manhã (nutri)",
+      "category": "💧 Saúde",
+      "days": [
+        false,
+        false,
+        false,
         false,
         false,
         false,
