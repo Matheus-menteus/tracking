@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-16T23:20:45.875Z",
+  "updatedAt": "2026-10-16T23:20:47.563Z",
   "currentWeekKey": "2026-10-12",
   "habits": [
     {
@@ -53,7 +53,7 @@
         true,
         true,
         true,
-        false,
+        true,
         false,
         false
       ]
@@ -166,7 +166,7 @@
       "shortLabel": "Sem 2 (12/10)",
       "fullLabel": "Semana 2 (12/10 a 18/10)",
       "rangeLabel": "12/10 a 18/10",
-      "archivedAt": "2026-10-16T23:20:46.678Z",
+      "archivedAt": "2026-10-16T23:20:48.364Z",
       "isSample": false,
       "habits": [
         {
@@ -220,7 +220,7 @@
             true,
             true,
             true,
-            false,
+            true,
             false,
             false
           ]
