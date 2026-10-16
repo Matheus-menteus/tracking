@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-16T01:19:40.291Z",
+  "updatedAt": "2026-10-16T01:19:42.843Z",
   "currentWeekKey": "2026-10-12",
   "habits": [
     {
@@ -66,7 +66,7 @@
         false,
         true,
         true,
-        false,
+        true,
         false,
         false,
         false
@@ -94,7 +94,7 @@
         false,
         true,
         true,
-        false,
+        true,
         false,
         false,
         false
@@ -166,7 +166,7 @@
       "shortLabel": "Sem 2 (12/10)",
       "fullLabel": "Semana 2 (12/10 a 18/10)",
       "rangeLabel": "12/10 a 18/10",
-      "archivedAt": "2026-10-16T01:19:41.096Z",
+      "archivedAt": "2026-10-16T01:19:43.062Z",
       "isSample": false,
       "habits": [
         {
@@ -233,7 +233,7 @@
             false,
             true,
             true,
-            false,
+            true,
             false,
             false,
             false
@@ -261,7 +261,7 @@
             false,
             true,
             true,
-            false,
+            true,
             false,
             false,
             false
