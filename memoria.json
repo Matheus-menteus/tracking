@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-19T11:04:21.349Z",
+  "updatedAt": "2026-10-19T11:48:31.899Z",
   "currentWeekKey": "2026-10-19",
   "habits": [
     {
@@ -21,7 +21,7 @@
       "name": "Café da manhã (nutri)",
       "category": "💧 Saúde",
       "days": [
-        false,
+        true,
         false,
         false,
         false,
@@ -333,7 +333,7 @@
       "shortLabel": "Sem 3 (19/10)",
       "fullLabel": "Semana 3 (19/10 a 25/10)",
       "rangeLabel": "19/10 a 25/10",
-      "archivedAt": "2026-10-19T11:04:22.153Z",
+      "archivedAt": "2026-10-19T11:48:32.703Z",
       "isSample": false,
       "habits": [
         {
@@ -355,7 +355,7 @@
           "name": "Café da manhã (nutri)",
           "category": "💧 Saúde",
           "days": [
-            false,
+            true,
             false,
             false,
             false,
