@@ -1,6 +1,6 @@
 {
-  "updatedAt": "2026-10-17T18:59:38.951Z",
-  "currentWeekKey": "2026-10-12",
+  "updatedAt": "2026-10-19T11:04:21.349Z",
+  "currentWeekKey": "2026-10-19",
   "habits": [
     {
       "id": 1,
@@ -8,11 +8,11 @@
       "category": "🏃 Esporte",
       "days": [
         false,
-        true,
-        true,
         false,
-        true,
-        true,
+        false,
+        false,
+        false,
+        false,
         false
       ]
     },
@@ -22,11 +22,11 @@
       "category": "💧 Saúde",
       "days": [
         false,
-        true,
-        true,
-        true,
-        true,
-        true,
+        false,
+        false,
+        false,
+        false,
+        false,
         false
       ]
     },
@@ -36,11 +36,11 @@
       "category": "💧 Saúde",
       "days": [
         false,
-        true,
-        true,
-        true,
-        true,
-        true,
+        false,
+        false,
+        false,
+        false,
+        false,
         false
       ]
     },
@@ -50,10 +50,10 @@
       "category": "💧 Saúde",
       "days": [
         false,
-        true,
-        true,
-        true,
-        true,
+        false,
+        false,
+        false,
+        false,
         false,
         false
       ]
@@ -64,9 +64,9 @@
       "category": "💧 Saúde",
       "days": [
         false,
-        true,
-        true,
-        true,
+        false,
+        false,
+        false,
         false,
         false,
         false
@@ -79,8 +79,8 @@
       "days": [
         false,
         false,
-        true,
-        true,
+        false,
+        false,
         false,
         false,
         false
@@ -92,11 +92,11 @@
       "category": "💧 Saúde",
       "days": [
         false,
-        true,
-        true,
-        true,
-        true,
-        true,
+        false,
+        false,
+        false,
+        false,
+        false,
         false
       ]
     },
@@ -106,10 +106,10 @@
       "category": "💼 Carreira",
       "days": [
         false,
-        true,
-        true,
-        true,
-        true,
+        false,
+        false,
+        false,
+        false,
         false,
         false
       ]
@@ -120,9 +120,9 @@
       "category": "📚 Estudo",
       "days": [
         false,
-        true,
-        true,
-        true,
+        false,
+        false,
+        false,
         false,
         false,
         false
@@ -134,11 +134,11 @@
       "category": "🏃 Esporte",
       "days": [
         false,
-        true,
         false,
-        true,
         false,
-        true,
+        false,
+        false,
+        false,
         false
       ]
     },
@@ -166,7 +166,7 @@
       "shortLabel": "Sem 2 (12/10)",
       "fullLabel": "Semana 2 (12/10 a 18/10)",
       "rangeLabel": "12/10 a 18/10",
-      "archivedAt": "2026-10-17T18:59:39.755Z",
+      "archivedAt": "2026-10-19T11:04:21.348Z",
       "isSample": false,
       "habits": [
         {
@@ -306,6 +306,173 @@
             true,
             false,
             true,
+            false
+          ]
+        },
+        {
+          "id": 1791987972463,
+          "name": "Dia sem doce!!!!!",
+          "category": "💧 Saúde",
+          "days": [
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false
+          ]
+        }
+      ]
+    },
+    "2026-10-19": {
+      "weekKey": "2026-10-19",
+      "monthKey": "2026-10",
+      "monthLabel": "Outubro 2026",
+      "weekNumberOfMonth": 3,
+      "shortLabel": "Sem 3 (19/10)",
+      "fullLabel": "Semana 3 (19/10 a 25/10)",
+      "rangeLabel": "19/10 a 25/10",
+      "archivedAt": "2026-10-19T11:04:22.153Z",
+      "isSample": false,
+      "habits": [
+        {
+          "id": 1,
+          "name": "Treino do Dia (Swim / Bike / Run)",
+          "category": "🏃 Esporte",
+          "days": [
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false
+          ]
+        },
+        {
+          "id": 1791986640188,
+          "name": "Café da manhã (nutri)",
+          "category": "💧 Saúde",
+          "days": [
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false
+          ]
+        },
+        {
+          "id": 1791986644500,
+          "name": "Almoço",
+          "category": "💧 Saúde",
+          "days": [
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false
+          ]
+        },
+        {
+          "id": 1791986652987,
+          "name": "Café da tarde (nutri)",
+          "category": "💧 Saúde",
+          "days": [
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false
+          ]
+        },
+        {
+          "id": 1791986656684,
+          "name": "Janta",
+          "category": "💧 Saúde",
+          "days": [
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false
+          ]
+        },
+        {
+          "id": 1791986670983,
+          "name": "Água (mínimo 3L)",
+          "category": "💧 Saúde",
+          "days": [
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false
+          ]
+        },
+        {
+          "id": 1791986679057,
+          "name": "Creatina",
+          "category": "💧 Saúde",
+          "days": [
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false
+          ]
+        },
+        {
+          "id": 1791986686164,
+          "name": "Trabalho",
+          "category": "💼 Carreira",
+          "days": [
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false
+          ]
+        },
+        {
+          "id": 1791986690108,
+          "name": "Aula",
+          "category": "📚 Estudo",
+          "days": [
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false
+          ]
+        },
+        {
+          "id": 1791986698573,
+          "name": "Academia",
+          "category": "🏃 Esporte",
+          "days": [
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
             false
           ]
         },
