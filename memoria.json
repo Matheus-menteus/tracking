@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-20T11:24:31.862Z",
+  "updatedAt": "2026-10-20T11:24:34.279Z",
   "currentWeekKey": "2026-10-19",
   "habits": [
     {
@@ -119,7 +119,7 @@
       "name": "Aula",
       "category": "📚 Estudo",
       "days": [
-        false,
+        true,
         false,
         false,
         false,
@@ -333,7 +333,7 @@
       "shortLabel": "Sem 3 (19/10)",
       "fullLabel": "Semana 3 (19/10 a 25/10)",
       "rangeLabel": "19/10 a 25/10",
-      "archivedAt": "2026-10-20T11:24:32.663Z",
+      "archivedAt": "2026-10-20T11:24:35.080Z",
       "isSample": false,
       "habits": [
         {
@@ -453,7 +453,7 @@
           "name": "Aula",
           "category": "📚 Estudo",
           "days": [
-            false,
+            true,
             false,
             false,
             false,
