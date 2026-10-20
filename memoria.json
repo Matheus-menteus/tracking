@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-20T11:24:30.245Z",
+  "updatedAt": "2026-10-20T11:24:31.862Z",
   "currentWeekKey": "2026-10-19",
   "habits": [
     {
@@ -63,7 +63,7 @@
       "name": "Janta",
       "category": "💧 Saúde",
       "days": [
-        false,
+        true,
         false,
         false,
         false,
@@ -333,7 +333,7 @@
       "shortLabel": "Sem 3 (19/10)",
       "fullLabel": "Semana 3 (19/10 a 25/10)",
       "rangeLabel": "19/10 a 25/10",
-      "archivedAt": "2026-10-20T11:24:31.047Z",
+      "archivedAt": "2026-10-20T11:24:32.663Z",
       "isSample": false,
       "habits": [
         {
@@ -397,7 +397,7 @@
           "name": "Janta",
           "category": "💧 Saúde",
           "days": [
-            false,
+            true,
             false,
             false,
             false,
