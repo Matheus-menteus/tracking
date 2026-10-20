@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-20T11:24:21.758Z",
+  "updatedAt": "2026-10-20T11:24:30.245Z",
   "currentWeekKey": "2026-10-19",
   "habits": [
     {
@@ -7,7 +7,7 @@
       "name": "Treino do Dia (Swim / Bike / Run)",
       "category": "🏃 Esporte",
       "days": [
-        false,
+        true,
         true,
         false,
         false,
@@ -333,7 +333,7 @@
       "shortLabel": "Sem 3 (19/10)",
       "fullLabel": "Semana 3 (19/10 a 25/10)",
       "rangeLabel": "19/10 a 25/10",
-      "archivedAt": "2026-10-20T11:24:23.806Z",
+      "archivedAt": "2026-10-20T11:24:31.047Z",
       "isSample": false,
       "habits": [
         {
@@ -341,7 +341,7 @@
           "name": "Treino do Dia (Swim / Bike / Run)",
           "category": "🏃 Esporte",
           "days": [
-            false,
+            true,
             true,
             false,
             false,
