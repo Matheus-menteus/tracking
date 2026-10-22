@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-22T01:41:54.164Z",
+  "updatedAt": "2026-10-22T01:41:56.983Z",
   "currentWeekKey": "2026-10-19",
   "habits": [
     {
@@ -9,7 +9,7 @@
       "days": [
         true,
         true,
-        false,
+        true,
         false,
         false,
         false,
@@ -51,7 +51,7 @@
       "days": [
         true,
         true,
-        false,
+        true,
         false,
         false,
         false,
@@ -65,7 +65,7 @@
       "days": [
         true,
         true,
-        false,
+        true,
         false,
         false,
         false,
@@ -333,7 +333,7 @@
       "shortLabel": "Sem 3 (19/10)",
       "fullLabel": "Semana 3 (19/10 a 25/10)",
       "rangeLabel": "19/10 a 25/10",
-      "archivedAt": "2026-10-22T01:41:54.871Z",
+      "archivedAt": "2026-10-22T01:41:58.033Z",
       "isSample": false,
       "habits": [
         {
@@ -343,7 +343,7 @@
           "days": [
             true,
             true,
-            false,
+            true,
             false,
             false,
             false,
@@ -385,7 +385,7 @@
           "days": [
             true,
             true,
-            false,
+            true,
             false,
             false,
             false,
@@ -399,7 +399,7 @@
           "days": [
             true,
             true,
-            false,
+            true,
             false,
             false,
             false,
