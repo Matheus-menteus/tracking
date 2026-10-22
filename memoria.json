@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-22T12:27:10.539Z",
+  "updatedAt": "2026-10-22T12:27:19.783Z",
   "currentWeekKey": "2026-10-19",
   "habits": [
     {
@@ -122,20 +122,6 @@
         true,
         true,
         true,
-        false,
-        false,
-        false,
-        false
-      ]
-    },
-    {
-      "id": 1791986698573,
-      "name": "Academia",
-      "category": "🏃 Esporte",
-      "days": [
-        false,
-        false,
-        false,
         false,
         false,
         false,
@@ -333,7 +319,7 @@
       "shortLabel": "Sem 3 (19/10)",
       "fullLabel": "Semana 3 (19/10 a 25/10)",
       "rangeLabel": "19/10 a 25/10",
-      "archivedAt": "2026-10-22T12:27:11.340Z",
+      "archivedAt": "2026-10-22T12:27:20.584Z",
       "isSample": false,
       "habits": [
         {
@@ -456,20 +442,6 @@
             true,
             true,
             true,
-            false,
-            false,
-            false,
-            false
-          ]
-        },
-        {
-          "id": 1791986698573,
-          "name": "Academia",
-          "category": "🏃 Esporte",
-          "days": [
-            false,
-            false,
-            false,
             false,
             false,
             false,
