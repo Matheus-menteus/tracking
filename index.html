@@ -324,6 +324,18 @@
       color: #34d399;
     }
 
+    .garmin-pill.warn-key {
+      background: rgba(245, 158, 11, 0.16);
+      border-color: rgba(245, 158, 11, 0.5);
+      color: #fbbf24;
+    }
+
+    .garmin-pill.error-key {
+      background: rgba(239, 68, 68, 0.16);
+      border-color: rgba(239, 68, 68, 0.5);
+      color: #f87171;
+    }
+
     .garmin-grid {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
@@ -384,6 +396,26 @@
       display: inline-flex;
       align-items: center;
       gap: 3px;
+    }
+
+    /* Banner de Diagnóstico Rápido quando os dados estão zerados */
+    .garmin-diag-alert {
+      margin-top: 12px;
+      background: rgba(245, 158, 11, 0.1);
+      border: 1px solid rgba(245, 158, 11, 0.4);
+      border-radius: 10px;
+      padding: 10px 12px;
+      font-size: 0.78rem;
+      color: #fde68a;
+      display: none;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .garmin-diag-alert.show {
+      display: flex;
     }
 
     /* KPI Grid */
@@ -1182,7 +1214,7 @@
       background: var(--bg-card);
       border: 1px solid var(--border);
       border-radius: 16px;
-      max-width: 560px;
+      max-width: 580px;
       width: 100%;
       padding: 20px;
       box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
@@ -1204,8 +1236,8 @@
 
     .modal-subtabs {
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 6px;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 5px;
       background: #0f172a;
       padding: 4px;
       border-radius: 10px;
@@ -1217,11 +1249,12 @@
       background: transparent;
       border: none;
       color: var(--text-secondary);
-      padding: 8px;
+      padding: 8px 4px;
       border-radius: 7px;
-      font-size: 0.78rem;
+      font-size: 0.74rem;
       font-weight: 700;
       cursor: pointer;
+      text-align: center;
     }
 
     .modal-subtab.active {
@@ -1285,9 +1318,10 @@
       font-size: 0.72rem;
       color: #94a3b8;
       margin-top: 10px;
-      max-height: 110px;
+      max-height: 150px;
       overflow-y: auto;
-      display: none;
+      display: block;
+      line-height: 1.45;
     }
   </style>
 </head>
@@ -1303,11 +1337,11 @@
             ☁️ Configurar GitHub Sync
           </span>
         </h1>
-        <p id="currentWeekSubtitle">Semana Atual • Hábitos + Chave de API Pessoal Garmin</p>
+        <p id="currentWeekSubtitle">Semana Atual • Hábitos + Garmin Connect (Seg a Dom)</p>
       </div>
       <div class="header-actions">
-        <button class="btn btn-garmin" style="flex:1;" onclick="openGarminModal('api')">🔑 Chave API Pessoal</button>
-        <button class="btn" style="flex:1;" onclick="manualPullAll()">🔄 Sincronizar</button>
+        <button class="btn btn-garmin" style="flex:1;" onclick="openGarminModal('api')">🔑 Chave / Diagnóstico</button>
+        <button class="btn" style="flex:1;" onclick="manualPullAll()">🔄 Sincronizar Semana</button>
         <button class="btn" onclick="openSyncModal()">⚙️</button>
       </div>
     </header>
@@ -1334,12 +1368,12 @@
             <span>⌚ Garmin Connect</span>
             <span class="garmin-pill" id="garminDayBadge">Hoje</span>
             <span class="garmin-pill" id="garminApiStatusBadge" style="cursor:pointer;" onclick="openGarminModal('api')">
-              🔑 Colar Chave de API Pessoal
+              🔑 Configurar Chave Garmin
             </span>
           </div>
           <div style="display:flex; gap:6px; flex-wrap:wrap;">
             <button class="btn btn-garmin" style="padding:6px 10px; font-size:0.75rem;" onclick="pullFromWatchApiDirect(false)">
-              ⚡ Sincronizar Chave Garmin
+              ⚡ Puxar Semana (Seg a Hoje)
             </button>
             <button class="btn" style="padding:6px 10px; font-size:0.75rem;" onclick="openGarminModal('manual')">
               ✏️ Editar Dia
@@ -1392,6 +1426,17 @@
             </div>
           </div>
         </div>
+
+        <!-- Alerta honesto caso o navegador bloqueie CORS na leitura direta -->
+        <div class="garmin-diag-alert" id="garminCorsAlert">
+          <span id="garminCorsAlertText">
+            ⚠️ <strong>Por que este dia está zerado?</strong> O navegador bloqueou a leitura direta da Garmin por segurança (CORS). Veja o diagnóstico ou ative o Robô do GitHub!
+          </span>
+          <div style="display:flex; gap:6px;">
+            <button class="btn" style="padding:5px 10px; font-size:0.73rem;" onclick="openGarminModal('api')">🔍 Ver Diagnóstico</button>
+            <button class="btn btn-primary" style="padding:5px 10px; font-size:0.73rem;" onclick="openGarminModal('robot')">🤖 Ativar Sync sem CORS</button>
+          </div>
+        </div>
       </section>
 
       <!-- KPI Cards -->
@@ -1438,7 +1483,7 @@
           <div class="card-header">
             <div>
               <div class="card-title">🎯 Metas Diárias</div>
-              <div class="card-subtitle">Metas com ⌚ recebem Auto-Check pela sua Chave Pessoal!</div>
+              <div class="card-subtitle">Toque nos dias (`Seg` a `Dom`) para ver ou marcar qualquer dia da semana</div>
             </div>
             <div class="day-selector" id="daySelector"></div>
           </div>
@@ -1484,7 +1529,7 @@
           </div>
 
           <div class="streak-banner">
-            <span>💡 Sua <strong>Chave de API Pessoal</strong> sincroniza com o GitHub!</span>
+            <span>💡 Varredura retroativa de <strong>Segunda a Domingo</strong>!</span>
             <span id="perfectDaysBadge" style="color: var(--success); font-weight: 700;">0 dias 100%</span>
           </div>
         </div>
@@ -1573,90 +1618,116 @@
     </div>
   </div>
 
-  <!-- Modal 1: Central Garmin (Nativo para a Chave de API Pessoal do Garmin Connect) -->
+  <!-- Modal 1: Central Garmin (Aba 1: Chave & Diagnóstico | Aba 2: Robô GitHub Sem CORS | Aba 3: Editar Dia) -->
   <div class="modal-backdrop" id="garminModal">
     <div class="modal-card">
       <div class="modal-header">
-        <h2>🔑 Chave de API Pessoal — Garmin Connect</h2>
+        <h2>⌚ Conexão Garmin Connect (Seg a Dom)</h2>
         <button class="delete-btn" onclick="closeGarminModal()">✕</button>
       </div>
 
       <div class="modal-subtabs">
         <button type="button" class="modal-subtab active" id="subtabBtnApi" onclick="switchGarminModalTab('api')">
-          🔑 Chave de API Pessoal
+          🔑 Chave & Diagnóstico
+        </button>
+        <button type="button" class="modal-subtab" id="subtabBtnRobot" onclick="switchGarminModalTab('robot')">
+          🤖 Sync GitHub (Sem CORS)
         </button>
         <button type="button" class="modal-subtab" id="subtabBtnManual" onclick="switchGarminModalTab('manual')">
-          ✏️ Editar Dia (<span id="garminModalDayName">Hoje</span>)
+          ✏️ Editar (<span id="garminModalDayName">Dia</span>)
         </button>
       </div>
 
-      <!-- SUB-ABA 1: CHAVE DE API PESSOAL DO GARMIN CONNECT -->
+      <!-- SUB-ABA 1: CHAVE DE API PESSOAL & DIAGNÓSTICO REAL -->
       <div id="garminTabApi">
         <div class="garmin-official-card">
           <div style="display:flex; align-items:center; gap:10px;">
-            <div style="width:38px; height:38px; border-radius:50%; background:#007cc3; display:flex; align-items:center; justify-content:center; font-size:1.1rem;">
+            <div style="width:36px; height:36px; border-radius:50%; background:#007cc3; display:flex; align-items:center; justify-content:center; font-size:1rem;">
               👤🔑
             </div>
             <div>
-              <div style="font-weight:700; font-size:0.9rem;">Chave de API pessoal (Garmin Connect)</div>
-              <div style="font-size:0.74rem; color:var(--text-secondary);" id="garminKeyCardSub">
-                Gerada em Configurações &rarr; Chave de API pessoal
+              <div style="font-weight:700; font-size:0.88rem;">Status Real da Conexão Garmin</div>
+              <div style="font-size:0.73rem; color:var(--text-secondary);" id="garminKeyCardSub">
+                Varredura retroativa de todos os dias da semana (Seg a Hoje)
               </div>
             </div>
           </div>
-          <span class="garmin-pill" id="modalKeyActiveIndicator">Não configurada</span>
+          <span class="garmin-pill" id="modalKeyActiveIndicator">Sem chave</span>
         </div>
 
         <form onsubmit="saveWatchApiConfig(event)">
           <div class="form-group">
-            <label>Cole sua Chave de API Pessoal do Garmin Connect</label>
+            <label>Sua Chave de API Pessoal (Garmin Connect) ou API Key (Intervals.icu)</label>
             <input
               type="password"
               id="garminPersonalKeyInput"
               class="input-field"
-              placeholder="Cole aqui a chave gerada no Garmin Connect..."
+              placeholder="Cole sua chave de API aqui..."
               required
             />
           </div>
 
-          <div class="form-group">
-            <label>Modo de Conexão da Chave</label>
-            <select id="garminCorsMode" class="select-field" onchange="toggleCustomEndpointField()">
-              <option value="auto">⚡ Automático (Direto + Fallback Ponte Anti-CORS para GitHub Pages)</option>
-              <option value="direct">🌐 Direto Puro (Sem intermediário CORS)</option>
-              <option value="custom">🔗 Endpoint Específico (Informar URL customizada)</option>
-            </select>
+          <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+            <div class="form-group">
+              <label>Tipo de Chave</label>
+              <select id="garminCorsMode" class="select-field" onchange="toggleCustomEndpointField()">
+                <option value="auto">⌚ Chave Pessoal Garmin Connect</option>
+                <option value="intervals">⚡ API Key Intervals.icu (CORS Livre)</option>
+                <option value="custom">🔗 Endpoint / Worker Próprio</option>
+              </select>
+            </div>
+            <div class="form-group" id="intervalsAthleteGroup" style="display:none;">
+              <label>Athlete ID (ex: i123456)</label>
+              <input type="text" id="garminAthleteIdInput" class="input-field" placeholder="ex: i123456" />
+            </div>
           </div>
 
           <div class="form-group" id="customEndpointGroup" style="display:none;">
-            <label>URL Base da API (Opcional)</label>
+            <label>URL Base da API / Cloudflare Worker</label>
             <input
               type="url"
               id="garminCustomBaseUrl"
               class="input-field"
-              placeholder="https://connectapi.garmin.com"
+              placeholder="https://seu-worker.workers.dev"
             />
           </div>
 
-          <div class="form-group" style="display:flex; align-items:center; gap:8px; margin-top:8px;">
-            <input type="checkbox" id="syncGarminKeyToGithub" checked style="width:18px; height:18px;" />
-            <label for="syncGarminKeyToGithub" style="margin:0; cursor:pointer; font-size:0.78rem;">
-              Salvar configuração no meu repositório (conecta celular e PC automaticamente)
-            </label>
+          <label style="font-size:0.75rem; font-weight:700; color:var(--text-secondary);">
+            📡 Console de Diagnóstico em Tempo Real (Mostra por que entrou ou falhou):
+          </label>
+          <div class="api-log-box" id="apiLogBox">
+            Clique em "Testar & Puxar Semana Inteira" abaixo para ver a resposta exata do servidor...
           </div>
-
-          <div class="api-log-box" id="apiLogBox"></div>
 
           <div style="display:flex; gap:8px; justify-content:space-between; margin-top:14px; flex-wrap:wrap;">
             <button type="button" class="btn btn-danger" onclick="disconnectWatchApi()">Remover Chave</button>
             <button type="submit" class="btn btn-primary" style="flex:1;">
-              🔑 Ativar Chave & Puxar Dados
+              🔍 Testar & Puxar Semana Inteira (Seg a Hoje)
             </button>
           </div>
         </form>
       </div>
 
-      <!-- SUB-ABA 2: EDIÇÃO MANUAL OU SIMULAÇÃO DO DIA -->
+      <!-- SUB-ABA 2: ROBÔ GITHUB ACTIONS (100% IMUNE A BLOQUEIO DE NAVEGADOR) -->
+      <div id="garminTabRobot" style="display:none;">
+        <div class="help-box">
+          <strong>💡 Por que o Robô do GitHub é o método mais garantido para puxar Quinta-feira e todos os dias passados?</strong><br/>
+          Quando você abre o site pelo navegador, o Chrome/Safari bloqueia chamadas diretas para <code>garmin.com</code> por segurança de domínio (<em>CORS</em>). Já o <strong>GitHub Actions</strong> roda no servidor do próprio GitHub (fora do navegador): ele entra no Garmin Connect, puxa <strong>Segunda, Terça, Quarta, Quinta, Sexta, Sábado e Domingo</strong> retroativamente, grava tudo no seu <code>memoria.json</code> e marca seus hábitos!
+        </div>
+
+        <div style="display:flex; gap:8px; margin-bottom:12px; flex-wrap:wrap;">
+          <button type="button" class="btn btn-primary" style="flex:1;" onclick="triggerGitHubWorkflowDispatch()">
+            🚀 Executar Robô no GitHub Agora
+          </button>
+        </div>
+
+        <div class="help-box" style="margin-bottom:0;">
+          <strong>Já configurou o arquivo no seu repositório?</strong><br/>
+          Basta ter o arquivo <code>sync_garmin.py</code> e <code>.github/workflows/garmin_sync.yml</code> no seu repositório (e colocar <code>GARMIN_EMAIL</code> / <code>GARMIN_PASSWORD</code> ou <code>GARMIN_API_KEY</code> em <em>Settings &rarr; Secrets &rarr; Actions</em>). Sempre que ele rodar, todos os dias anteriores da semana aparecerão preenchidos aqui automaticamente!
+        </div>
+      </div>
+
+      <!-- SUB-ABA 3: EDIÇÃO MANUAL OU SIMULAÇÃO DO DIA -->
       <div id="garminTabManual" style="display:none;">
         <form onsubmit="saveGarminDayForm(event)">
           <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
@@ -1720,10 +1791,10 @@
 
           <div style="display: flex; gap: 8px; justify-content: space-between; margin-top: 12px; flex-wrap: wrap;">
             <button type="button" class="btn btn-garmin" onclick="simulateGarminWatchSync()">
-              ⌚ Preencher Teste
+              ⌚ Preencher Teste neste Dia
             </button>
             <button type="submit" class="btn btn-primary" style="flex:1;">
-              💾 Salvar & Executar Auto-Check
+              💾 Salvar Dia & Auto-Check
             </button>
           </div>
         </form>
@@ -1906,6 +1977,7 @@
     let appState = loadLocalState();
     let ghConfig = loadGhConfig();
     let watchApiConfig = loadWatchApiConfig();
+    let lastGarminFetchState = 'idle'; // 'idle' | 'loading' | 'success' | 'cors_blocked'
     let lastFileSha = null;
     let pushTimeout = null;
     let selectedHistoryWeekKey = appState.currentWeekKey;
@@ -1983,12 +2055,19 @@
       return {
         personalKey: '',
         corsMode: 'auto',
+        athleteId: '',
         customBaseUrl: ''
       };
     }
 
     function isWatchApiConfigured() {
       return Boolean(watchApiConfig && watchApiConfig.personalKey && watchApiConfig.personalKey.trim().length > 4);
+    }
+
+    function hasAnyGarminDataInWeek() {
+      return (appState.garminWeek || []).some(d =>
+        (d && ((d.sport && d.sport !== 'none') || Number(d.sleepHours) > 0 || Number(d.steps) > 0 || Number(d.restingHr) > 0))
+      );
     }
 
     function createWeekSnapshot(weekKey, habitsList, garminWeekData, isSample = false) {
@@ -2018,7 +2097,7 @@
     }
 
     // =====================================================
-    // INTEGRAÇÃO NATIVA: CHAVE DE API PESSOAL GARMIN CONNECT
+    // VARREDURA COMPLETA DOS 7 DIAS DA SEMANA (SEG A DOM) + DIAGNÓSTICO REAL
     // =====================================================
     function mapExternalSportType(rawType) {
       const t = String(rawType || '').toLowerCase();
@@ -2030,18 +2109,22 @@
       return 'run';
     }
 
-    function appendApiLog(msg) {
+    function clearApiLog() {
+      const box = document.getElementById('apiLogBox');
+      if (box) box.innerHTML = '';
+    }
+
+    function appendApiLog(msg, color = '#94a3b8') {
       const box = document.getElementById('apiLogBox');
       if (!box) return;
-      box.style.display = 'block';
       const line = document.createElement('div');
+      line.style.color = color;
       line.textContent = `[${new Date().toLocaleTimeString('pt-BR')}] ${msg}`;
       box.appendChild(line);
       box.scrollTop = box.scrollHeight;
     }
 
-    // Faz a chamada HTTP com a Chave de API Pessoal (tenta direto e, se o navegador bloquear por CORS, usa ponte HTTPS automaticamente)
-    async function fetchWithGarminPersonalKey(targetUrl, key, corsMode) {
+    async function fetchWithGarminPersonalKey(targetUrl, key) {
       const headers = {
         'Authorization': `Bearer ${key}`,
         'X-Garmin-Api-Key': key,
@@ -2050,27 +2133,30 @@
         'Accept': 'application/json'
       };
 
-      if (corsMode === 'direct' || corsMode === 'auto' || corsMode === 'custom') {
-        try {
-          const directRes = await fetch(targetUrl, { headers });
-          if (directRes.ok) {
-            return await directRes.json();
-          }
-        } catch (directErr) {
-          if (corsMode === 'direct') throw directErr;
+      // Tentativa 1: Chamada Direta
+      try {
+        const directRes = await fetch(targetUrl, { headers });
+        if (directRes.ok) {
+          return { ok: true, via: 'Direto', data: await directRes.json() };
         }
+        appendApiLog(`Chamada direta retornou HTTP ${directRes.status}`, '#fbbf24');
+      } catch (directErr) {
+        appendApiLog(`Navegador bloqueou chamada direta para garmin.com (CORS). Tentando túneis...`, '#fbbf24');
       }
 
-      // Fallback anti-CORS caso o navegador bloqueie chamada direta do domínio github.io para garmin.com
-      const proxyUrl = `https://corsproxy.io/?${encodeURIComponent(targetUrl)}`;
-      const proxyRes = await fetch(proxyUrl, { headers });
-      if (!proxyRes.ok) {
-        throw new Error(`HTTP ${proxyRes.status}`);
-      }
-      return await proxyRes.json();
+      // Tentativa 2: Túnel CORS 1
+      try {
+        const proxy1 = `https://corsproxy.io/?url=${encodeURIComponent(targetUrl)}`;
+        const res1 = await fetch(proxy1, { headers });
+        if (res1.ok) {
+          return { ok: true, via: 'Túnel 1', data: await res1.json() };
+        }
+        appendApiLog(`Túnel 1 retornou HTTP ${res1.status}`, '#fbbf24');
+      } catch (e1) {}
+
+      return { ok: false };
     }
 
-    // Interpreta qualquer formato JSON retornado pela API Pessoal do Garmin Connect
     function parseGarminActivitiesPayload(payload, monDate) {
       const list = Array.isArray(payload)
         ? payload
@@ -2114,7 +2200,6 @@
       const gmDay = appState.garminWeek[dIdx] || {};
       let updated = false;
 
-      // Formato Daily Summary / User Summary do Garmin Connect
       const summary = payload.userDailySummary || payload.summary || payload;
       if (summary.totalSteps || summary.steps) {
         gmDay.steps = Math.round(summary.totalSteps || summary.steps);
@@ -2131,12 +2216,13 @@
         updated = true;
       }
 
-      // Formato Sleep DTO do Garmin Connect
       const sleepDto = payload.dailySleepDTO || payload.sleep || payload;
       if (sleepDto.sleepTimeSeconds || sleepDto.durationInSeconds) {
         const secs = Number(sleepDto.sleepTimeSeconds || sleepDto.durationInSeconds);
-        gmDay.sleepHours = Number((secs / 3600).toFixed(2));
-        updated = true;
+        if (secs > 0) {
+          gmDay.sleepHours = Number((secs / 3600).toFixed(2));
+          updated = true;
+        }
       }
       if (sleepDto.sleepScores && sleepDto.sleepScores.overall && sleepDto.sleepScores.overall.value) {
         gmDay.sleepScore = Math.round(sleepDto.sleepScores.overall.value);
@@ -2151,94 +2237,168 @@
     }
 
     async function pullFromWatchApiDirect(silent = false) {
-      const badge = document.getElementById('garminApiStatusBadge');
       if (!isWatchApiConfigured()) {
         if (!silent) openGarminModal('api');
         return;
       }
 
+      lastGarminFetchState = 'loading';
+      renderGarminHub();
+      clearApiLog();
+
       const key = watchApiConfig.personalKey.trim();
-      const corsMode = watchApiConfig.corsMode || 'auto';
-      const base = (watchApiConfig.customBaseUrl && watchApiConfig.customBaseUrl.trim())
-        ? watchApiConfig.customBaseUrl.trim().replace(/\/$/, '')
-        : 'https://connectapi.garmin.com';
-
-      if (badge) {
-        badge.textContent = '⏳ Sincronizando Chave Garmin...';
-        badge.classList.remove('active-key');
-      }
-      appendApiLog('Iniciando conexão com a Chave de API pessoal do Garmin Connect...');
-
+      const mode = watchApiConfig.corsMode || 'auto';
       const monDate = parseDateKey(appState.currentWeekKey);
       const sunDate = new Date(monDate.getFullYear(), monDate.getMonth(), monDate.getDate() + 6);
       const startDateStr = formatDateKey(monDate);
       const endDateStr = formatDateKey(sunDate);
 
-      let anySuccess = false;
+      appendApiLog(`Buscando dados retroativos da semana inteira (${startDateStr} até ${endDateStr})...`, '#38bdf8');
+
+      let daysUpdatedCount = 0;
 
       try {
-        // 1. Tenta buscar lista de atividades da semana na API do Garmin Connect
-        const actEndpoints = [
-          `${base}/activitylist-service/activities/search/activities?startDate=${startDateStr}&endDate=${endDateStr}&limit=30`,
-          `https://connect.garmin.com/modern/proxy/activitylist-service/activities/search/activities?startDate=${startDateStr}&endDate=${endDateStr}&limit=30`
-        ];
+        // MODO 1: INTERVALS.ICU (Possui CORS liberado nativamente para navegadores!)
+        if (mode === 'intervals') {
+          const athId = (watchApiConfig.athleteId || '').trim();
+          if (!athId) {
+            appendApiLog('⚠️ Informe seu Athlete ID (ex: i123456) para usar a chave Intervals.icu.', '#f87171');
+            lastGarminFetchState = 'cors_blocked';
+            renderGarminHub();
+            return;
+          }
+          const authHeader = 'Basic ' + btoa('API_KEY:' + key);
+          const [wellRes, actRes] = await Promise.all([
+            fetch(`https://intervals.icu/api/v1/athlete/${encodeURIComponent(athId)}/wellness?oldest=${startDateStr}&newest=${endDateStr}`, {
+              headers: { 'Authorization': authHeader, 'Accept': 'application/json' }
+            }),
+            fetch(`https://intervals.icu/api/v1/athlete/${encodeURIComponent(athId)}/activities?oldest=${startDateStr}&newest=${endDateStr}`, {
+              headers: { 'Authorization': authHeader, 'Accept': 'application/json' }
+            })
+          ]);
 
-        for (const ep of actEndpoints) {
-          try {
-            const actData = await fetchWithGarminPersonalKey(ep, key, corsMode);
-            if (actData) {
-              const found = parseGarminActivitiesPayload(actData, monDate);
-              appendApiLog(`Atividades sincronizadas (${found} treinos encontrados na semana).`);
-              anySuccess = true;
-              break;
-            }
-          } catch (e) {}
-        }
+          if (wellRes.ok && actRes.ok) {
+            const wellnessList = await wellRes.json();
+            const activitiesList = await actRes.json();
 
-        // 2. Tenta buscar Sono, Passos, FC de Repouso e Body Battery do dia selecionado e de hoje
-        const daysToFetch = Array.from(new Set([selectedDayIndex, todayIndex]));
-        for (const dIdx of daysToFetch) {
-          const dDate = new Date(monDate.getFullYear(), monDate.getMonth(), monDate.getDate() + dIdx);
-          const dKey = formatDateKey(dDate);
+            // Varre TODOS os 7 dias da semana (Seg, Ter, Qua, Qui, Sex, Sáb, Dom)
+            for (let dIdx = 0; dIdx < 7; dIdx++) {
+              const dDate = new Date(monDate.getFullYear(), monDate.getMonth(), monDate.getDate() + dIdx);
+              const dKey = formatDateKey(dDate);
+              const gmDay = appState.garminWeek[dIdx] || {};
 
-          const wellnessEndpoints = [
-            `${base}/usersummary-service/usersummary/daily/?calendarDate=${dKey}`,
-            `${base}/wellness-service/wellness/dailySleepData?date=${dKey}`
-          ];
-
-          for (const wep of wellnessEndpoints) {
-            try {
-              const wData = await fetchWithGarminPersonalKey(wep, key, corsMode);
-              if (parseGarminDailyWellnessPayload(wData, dIdx)) {
-                anySuccess = true;
+              const well = (wellnessList || []).find(w => w.id === dKey);
+              if (well) {
+                if (well.sleepSecs) gmDay.sleepHours = Number((well.sleepSecs / 3600).toFixed(2));
+                if (well.sleepScore) gmDay.sleepScore = Math.round(well.sleepScore);
+                if (well.restingHR) gmDay.restingHr = Math.round(well.restingHR);
+                if (well.steps) gmDay.steps = Math.round(well.steps);
+                if (well.readiness) gmDay.bodyBattery = Math.round(well.readiness);
+                daysUpdatedCount++;
               }
-            } catch (e) {}
+
+              const dayActs = (activitiesList || []).filter(a => (a.start_date_local || '').startsWith(dKey));
+              if (dayActs.length > 0) {
+                const mainAct = dayActs[0];
+                gmDay.sport = dayActs.length > 1 ? 'tri' : mapExternalSportType(mainAct.type);
+                gmDay.title = dayActs.map(a => a.name || a.type).join(' + ');
+                const totalMeters = dayActs.reduce((acc, a) => acc + (Number(a.distance) || 0), 0);
+                const totalSecs = dayActs.reduce((acc, a) => acc + (Number(a.moving_time || a.elapsed_time) || 0), 0);
+                gmDay.distanceKm = Number((totalMeters / 1000).toFixed(2));
+                gmDay.durationMin = Math.round(totalSecs / 60);
+                gmDay.avgHr = Math.round(mainAct.average_heartrate || 0);
+                daysUpdatedCount++;
+              }
+              appState.garminWeek[dIdx] = gmDay;
+              applyGarminAutoCheckRules(dIdx);
+            }
+          } else {
+            appendApiLog(`❌ Erro HTTP ${wellRes.status} ao consultar Intervals.icu. Verifique ID e API Key.`, '#f87171');
+          }
+        } else {
+          // MODO 2: CHAVE DE API PESSOAL GARMIN CONNECT (Varre Seg até Hoje!)
+          const base = (mode === 'custom' && watchApiConfig.customBaseUrl)
+            ? watchApiConfig.customBaseUrl.trim().replace(/\/$/, '')
+            : 'https://connectapi.garmin.com';
+
+          const actUrl = `${base}/activitylist-service/activities/search/activities?startDate=${startDateStr}&endDate=${endDateStr}&limit=30`;
+          const actResult = await fetchWithGarminPersonalKey(actUrl, key);
+
+          if (actResult.ok && actResult.data) {
+            const count = parseGarminActivitiesPayload(actResult.data, monDate);
+            appendApiLog(`✅ Lista de atividades recebida via ${actResult.via} (${count} treinos na semana).`, '#34d399');
+            daysUpdatedCount += count;
+          }
+
+          // Varre TODOS os dias da semana de Segunda (0) até Hoje (todayIndex) — incluindo Quinta-feira!
+          for (let dIdx = 0; dIdx <= todayIndex; dIdx++) {
+            const dDate = new Date(monDate.getFullYear(), monDate.getMonth(), monDate.getDate() + dIdx);
+            const dKey = formatDateKey(dDate);
+
+            const sumUrl = `${base}/usersummary-service/usersummary/daily/?calendarDate=${dKey}`;
+            const sleepUrl = `${base}/wellness-service/wellness/dailySleepData?date=${dKey}`;
+
+            const sumRes = await fetchWithGarminPersonalKey(sumUrl, key);
+            if (sumRes.ok && parseGarminDailyWellnessPayload(sumRes.data, dIdx)) {
+              daysUpdatedCount++;
+            }
+
+            const sleepRes = await fetchWithGarminPersonalKey(sleepUrl, key);
+            if (sleepRes.ok && parseGarminDailyWellnessPayload(sleepRes.data, dIdx)) {
+              daysUpdatedCount++;
+            }
           }
         }
 
-        // Aplica Auto-Check nos 7 dias da semana
         for (let i = 0; i < 7; i++) {
           applyGarminAutoCheckRules(i);
         }
 
-        const nowStr = new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
-        if (badge) {
-          badge.textContent = `🔑 Chave Garmin Ativa (${nowStr})`;
-          badge.classList.add('active-key');
+        if (daysUpdatedCount > 0) {
+          lastGarminFetchState = 'success';
+          appendApiLog(`🎉 Sucesso! Dados de Segunda até Hoje atualizados e hábitos marcados!`, '#34d399');
+        } else {
+          lastGarminFetchState = 'cors_blocked';
+          appendApiLog(
+            `⚠️ O navegador bloqueou a conexão direta com os servidores da Garmin (CORS) ou o endpoint recusou a chamada pelo navegador. Para puxar todos os dias passados sem bloqueio, use a aba "🤖 Sync GitHub (Sem CORS)" acima!`,
+            '#f87171'
+          );
         }
-        appendApiLog(anySuccess
-          ? '✅ Dados recebidos e hábitos marcados automaticamente!'
-          : '🔑 Chave salva! Se o navegador bloquear CORS direto, o painel usará a memória sincronizada do GitHub.');
 
         renderAll();
         schedulePushToGitHub();
       } catch (err) {
-        console.warn('Aviso ao consultar endpoint Garmin:', err);
-        if (badge) {
-          badge.textContent = '🔑 Chave Pessoal Salva';
-          badge.classList.add('active-key');
+        lastGarminFetchState = 'cors_blocked';
+        appendApiLog(`❌ Falha na requisição pelo navegador: ${err.message}`, '#f87171');
+        renderAll();
+      }
+    }
+
+    // Dispara o workflow_dispatch do GitHub Actions direto pelo celular/PC
+    async function triggerGitHubWorkflowDispatch() {
+      if (!isGhConfigured()) {
+        alert('Configure seu Usuário, Repositório e Token do GitHub primeiro no botão ⚙️!');
+        return;
+      }
+      const url = `https://api.github.com/repos/${ghConfig.owner}/${ghConfig.repo}/actions/workflows/garmin_sync.yml/dispatches`;
+      try {
+        const res = await fetch(url, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${ghConfig.token}`,
+            'Accept': 'application/vnd.github.v3+json',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ ref: 'main' })
+        });
+        if (res.status === 204) {
+          alert('🚀 Robô disparado no GitHub Actions! Aguarde ~30 segundos e clique em "🔄 Sincronizar Semana" para ver Segunda, Terça, Quarta, Quinta e Sexta preenchidas!');
+          closeGarminModal();
+        } else {
+          alert(`O GitHub retornou HTTP ${res.status}. Verifique se você já criou o arquivo .github/workflows/garmin_sync.yml no seu repositório.`);
         }
-        appendApiLog('Chave salva localmente. Verifique se há bloqueio de CORS no navegador.');
+      } catch (err) {
+        alert('Erro ao contatar a API do GitHub Actions.');
       }
     }
 
@@ -2279,23 +2439,47 @@
 
       const apiBadge = document.getElementById('garminApiStatusBadge');
       const modalInd = document.getElementById('modalKeyActiveIndicator');
-      if (isWatchApiConfigured()) {
-        if (apiBadge && !apiBadge.textContent.includes('Sincronizando')) {
-          apiBadge.textContent = '🔑 Chave Pessoal Ativa ✓';
-          apiBadge.classList.add('active-key');
-        }
-        if (modalInd) {
-          modalInd.textContent = 'Ativo ✓';
-          modalInd.classList.add('active-key');
-        }
-      } else {
+      const corsAlert = document.getElementById('garminCorsAlert');
+
+      const dayHasData = (gm.sport && gm.sport !== 'none') || Number(gm.sleepHours) > 0 || Number(gm.steps) > 0 || Number(gm.restingHr) > 0;
+
+      if (!isWatchApiConfigured()) {
         if (apiBadge) {
-          apiBadge.textContent = '🔑 Colar Chave de API Pessoal';
-          apiBadge.classList.remove('active-key');
+          apiBadge.textContent = '🔑 Configurar Chave Garmin';
+          apiBadge.className = 'garmin-pill';
         }
         if (modalInd) {
           modalInd.textContent = 'Não configurada';
-          modalInd.classList.remove('active-key');
+          modalInd.className = 'garmin-pill';
+        }
+        if (corsAlert) corsAlert.classList.remove('show');
+      } else if (lastGarminFetchState === 'loading') {
+        if (apiBadge) {
+          apiBadge.textContent = '⏳ Buscando Seg a Hoje...';
+          apiBadge.className = 'garmin-pill warn-key';
+        }
+      } else if (lastGarminFetchState === 'success' || hasAnyGarminDataInWeek()) {
+        if (apiBadge) {
+          apiBadge.textContent = '✅ Dados Garmin Sincronizados';
+          apiBadge.className = 'garmin-pill active-key';
+        }
+        if (modalInd) {
+          modalInd.textContent = 'Dados Recebidos ✓';
+          modalInd.className = 'garmin-pill active-key';
+        }
+        if (corsAlert) corsAlert.classList.remove('show');
+      } else {
+        // Chave está salva, mas os dados ainda estão todos zerados (bloqueio CORS do navegador)
+        if (apiBadge) {
+          apiBadge.textContent = '⚠️ Chave Salva (Sem Dados / CORS)';
+          apiBadge.className = 'garmin-pill warn-key';
+        }
+        if (modalInd) {
+          modalInd.textContent = 'Bloqueio CORS Navegador';
+          modalInd.className = 'garmin-pill warn-key';
+        }
+        if (corsAlert && !dayHasData) {
+          corsAlert.classList.add('show');
         }
       }
 
@@ -2333,31 +2517,31 @@
 
     function switchGarminModalTab(subtab) {
       const tApi = document.getElementById('garminTabApi');
+      const tRob = document.getElementById('garminTabRobot');
       const tMan = document.getElementById('garminTabManual');
       const bApi = document.getElementById('subtabBtnApi');
+      const bRob = document.getElementById('subtabBtnRobot');
       const bMan = document.getElementById('subtabBtnManual');
 
-      if (subtab === 'manual') {
-        tApi.style.display = 'none';
-        tMan.style.display = 'block';
-        bApi.classList.remove('active');
-        bMan.classList.add('active');
-      } else {
-        tApi.style.display = 'block';
-        tMan.style.display = 'none';
-        bApi.classList.add('active');
-        bMan.classList.remove('active');
-      }
+      tApi.style.display = subtab === 'api' ? 'block' : 'none';
+      tRob.style.display = subtab === 'robot' ? 'block' : 'none';
+      tMan.style.display = subtab === 'manual' ? 'block' : 'none';
+
+      bApi.classList.toggle('active', subtab === 'api');
+      bRob.classList.toggle('active', subtab === 'robot');
+      bMan.classList.toggle('active', subtab === 'manual');
     }
 
     function toggleCustomEndpointField() {
       const mode = document.getElementById('garminCorsMode').value;
       document.getElementById('customEndpointGroup').style.display = mode === 'custom' ? 'block' : 'none';
+      document.getElementById('intervalsAthleteGroup').style.display = mode === 'intervals' ? 'block' : 'none';
     }
 
     function openGarminModal(defaultSubtab = 'api') {
       document.getElementById('garminPersonalKeyInput').value = watchApiConfig.personalKey || '';
       document.getElementById('garminCorsMode').value = watchApiConfig.corsMode || 'auto';
+      document.getElementById('garminAthleteIdInput').value = watchApiConfig.athleteId || '';
       document.getElementById('garminCustomBaseUrl').value = watchApiConfig.customBaseUrl || '';
       toggleCustomEndpointField();
 
@@ -2388,26 +2572,17 @@
       watchApiConfig = {
         personalKey: document.getElementById('garminPersonalKeyInput').value.trim(),
         corsMode: document.getElementById('garminCorsMode').value,
+        athleteId: document.getElementById('garminAthleteIdInput').value.trim(),
         customBaseUrl: document.getElementById('garminCustomBaseUrl').value.trim()
       };
       localStorage.setItem(GARMIN_PERSONAL_KEY_STORAGE, JSON.stringify(watchApiConfig));
-
-      if (document.getElementById('syncGarminKeyToGithub').checked) {
-        appState.garminConfigSync = {
-          corsMode: watchApiConfig.corsMode,
-          customBaseUrl: watchApiConfig.customBaseUrl,
-          hasKeyConfigured: true
-        };
-      }
-
-      renderGarminHub();
       await pullFromWatchApiDirect(false);
     }
 
     function disconnectWatchApi() {
       localStorage.removeItem(GARMIN_PERSONAL_KEY_STORAGE);
-      watchApiConfig = { personalKey: '', corsMode: 'auto', customBaseUrl: '' };
-      appState.garminConfigSync = null;
+      watchApiConfig = { personalKey: '', corsMode: 'auto', athleteId: '', customBaseUrl: '' };
+      lastGarminFetchState = 'idle';
       renderGarminHub();
       closeGarminModal();
     }
@@ -3108,7 +3283,9 @@
       });
 
       input.value = '';
-      applyGarminAutoCheckRules(selectedDayIndex);
+      for (let i = 0; i < 7; i++) {
+        applyGarminAutoCheckRules(i);
+      }
       renderAll();
       schedulePushToGitHub();
     }
