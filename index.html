@@ -1372,8 +1372,11 @@
             </span>
           </div>
           <div style="display:flex; gap:6px; flex-wrap:wrap;">
-            <button class="btn btn-garmin" style="padding:6px 10px; font-size:0.75rem;" onclick="pullFromWatchApiDirect(false)">
-              ⚡ Puxar Semana (Seg a Hoje)
+            <button class="btn btn-garmin" style="padding:6px 10px; font-size:0.75rem;" onclick="triggerGitHubWorkflowDispatch()">
+              🤖 Rodar Robô API (GitHub)
+            </button>
+            <button class="btn" style="padding:6px 10px; font-size:0.75rem;" onclick="pullFromWatchApiDirect(false)">
+              ⚡ Testar Direto
             </button>
             <button class="btn" style="padding:6px 10px; font-size:0.75rem;" onclick="openGarminModal('manual')">
               ✏️ Editar Dia
@@ -2124,7 +2127,43 @@
       box.scrollTop = box.scrollHeight;
     }
 
-    async function fetchWithGarminPersonalKey(targetUrl, key) {
+    // Troca a Chave Pessoal por um Access Token OAuth2 oficial em personal.connectapi.garmin.com
+    async function obtainOfficialGarminAccessToken(baseUrl, personalKey) {
+      const tokenUrl = `${baseUrl}/personalapitoken-service/personal-api/personal-api-key/token`;
+      const headers = {
+        'Authorization': `ApiKey ${personalKey.trim()}`,
+        'Accept': 'application/json'
+      };
+
+      // Tentativa 1: Direto (ou via Worker próprio)
+      try {
+        const res = await fetch(tokenUrl, { method: 'POST', headers });
+        if (res.ok) {
+          const data = await res.json();
+          const tok = data.access_token || data.accessToken || data.token;
+          if (tok) return { ok: true, via: 'Direto', token: tok };
+        }
+      } catch (e) {}
+
+      // Tentativa 2: Via Túnel CORS
+      try {
+        const proxyUrl = `https://corsproxy.io/?url=${encodeURIComponent(tokenUrl)}`;
+        const resP = await fetch(proxyUrl, { method: 'POST', headers });
+        if (resP.ok) {
+          const data = await resP.json();
+          const tok = data.access_token || data.accessToken || data.token;
+          if (tok) return { ok: true, via: 'Túnel CORS', token: tok };
+        }
+      } catch (e2) {}
+
+      return { ok: false };
+    }
+
+    async function fetchWithGarminPersonalKey(targetUrl, bearerOrKey) {
+      const headers = {
+        'Authorization': `Bearer ${bearerOrKey}`,
+        'Accept': 'application/json'
+      };
       const headers = {
         'Authorization': `Bearer ${key}`,
         'X-Garmin-Api-Key': key,
@@ -2316,13 +2355,22 @@
             appendApiLog(`❌ Erro HTTP ${wellRes.status} ao consultar Intervals.icu. Verifique ID e API Key.`, '#f87171');
           }
         } else {
-          // MODO 2: CHAVE DE API PESSOAL GARMIN CONNECT (Varre Seg até Hoje!)
+          // MODO 2: CHAVE DE API PESSOAL OFICIAL GARMIN (personal.connectapi.garmin.com)
           const base = (mode === 'custom' && watchApiConfig.customBaseUrl)
             ? watchApiConfig.customBaseUrl.trim().replace(/\/$/, '')
-            : 'https://connectapi.garmin.com';
+            : 'https://personal.connectapi.garmin.com';
 
-          const actUrl = `${base}/activitylist-service/activities/search/activities?startDate=${startDateStr}&endDate=${endDateStr}&limit=30`;
-          const actResult = await fetchWithGarminPersonalKey(actUrl, key);
+          appendApiLog('1. Trocando Chave Pessoal por Access Token OAuth2 em personal.connectapi.garmin.com...', '#38bdf8');
+          const tokRes = await obtainOfficialGarminAccessToken(base, key);
+          const activeBearer = tokRes.ok ? tokRes.token : key;
+          if (tokRes.ok) {
+            appendApiLog(`✅ Access Token OAuth2 obtido com sucesso (${tokRes.via})!`, '#34d399');
+          } else {
+            appendApiLog('⚠️ Navegador bloqueou o POST de troca de token (CORS). Use o botão "🤖 Rodar Robô API GitHub" para extrair sem bloqueio!', '#fbbf24');
+          }
+
+          const actUrl = `${base}/activitylist-service/activities/search/activities?startDate=${startDateStr}&endDate=${endDateStr}&start=0&limit=30`;
+          const actResult = await fetchWithGarminPersonalKey(actUrl, activeBearer);
 
           if (actResult.ok && actResult.data) {
             const count = parseGarminActivitiesPayload(actResult.data, monDate);
@@ -2335,15 +2383,15 @@
             const dDate = new Date(monDate.getFullYear(), monDate.getMonth(), monDate.getDate() + dIdx);
             const dKey = formatDateKey(dDate);
 
-            const sumUrl = `${base}/usersummary-service/usersummary/daily/?calendarDate=${dKey}`;
-            const sleepUrl = `${base}/wellness-service/wellness/dailySleepData?date=${dKey}`;
+            const sumUrl = `${base}/usersummary-service/usersummary/daily?calendarDate=${dKey}`;
+            const sleepUrl = `${base}/sleep-service/sleep/dailySleep?date=${dKey}`;
 
-            const sumRes = await fetchWithGarminPersonalKey(sumUrl, key);
+            const sumRes = await fetchWithGarminPersonalKey(sumUrl, activeBearer);
             if (sumRes.ok && parseGarminDailyWellnessPayload(sumRes.data, dIdx)) {
               daysUpdatedCount++;
             }
 
-            const sleepRes = await fetchWithGarminPersonalKey(sleepUrl, key);
+            const sleepRes = await fetchWithGarminPersonalKey(sleepUrl, activeBearer);
             if (sleepRes.ok && parseGarminDailyWellnessPayload(sleepRes.data, dIdx)) {
               daysUpdatedCount++;
             }
