@@ -1,0 +1,38 @@
+name: Sincronizar Garmin Connect
+
+on:
+  schedule:
+    - cron: '0 11,16,23 * * *' # Roda sozinho 3x ao dia (08h, 13h e 20h no horário de Brasília)
+  workflow_dispatch: # Permite disparar pelo botão do seu painel no celular!
+
+permissions:
+  contents: write
+
+jobs:
+  sync-garmin:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Baixar Repositório
+        uses: actions/checkout@v4
+
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Instalar biblioteca Garmin
+        run: pip install garminconnect
+
+      - name: Executar Sincronização Garmin -> memoria.json
+        env:
+          GARMIN_EMAIL: ${{ secrets.GARMIN_EMAIL }}
+          GARMIN_PASSWORD: ${{ secrets.GARMIN_PASSWORD }}
+        run: python sync_garmin.py
+
+      - name: Salvar memoria.json atualizado no GitHub
+        run: |
+          git config user.name "Garmin Super Tracker Bot"
+          git config user.email "bot@github.com"
+          git add memoria.json
+          git diff --staged --quiet || git commit -m "⌚ Sync automático Garmin Connect"
+          git push
