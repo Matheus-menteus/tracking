@@ -2162,12 +2162,8 @@
     async function fetchWithGarminPersonalKey(targetUrl, bearerOrKey) {
       const headers = {
         'Authorization': `Bearer ${bearerOrKey}`,
-        'Accept': 'application/json'
-      };
-      const headers = {
-        'Authorization': `Bearer ${key}`,
-        'X-Garmin-Api-Key': key,
-        'api-key': key,
+        'X-Garmin-Api-Key': bearerOrKey,
+        'api-key': bearerOrKey,
         'DI-Backend': 'connectapi.garmin.com',
         'Accept': 'application/json'
       };
