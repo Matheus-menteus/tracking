@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-23T12:43:51.571Z",
+  "updatedAt": "2026-10-23T13:15:23.751Z",
   "currentWeekKey": "2026-10-19",
   "habits": [
     {
@@ -14,7 +14,8 @@
         false,
         false,
         false
-      ]
+      ],
+      "autoRule": "garmin_workout"
     },
     {
       "id": 1791986640188,
@@ -28,7 +29,8 @@
         true,
         false,
         false
-      ]
+      ],
+      "autoRule": "none"
     },
     {
       "id": 1791986644500,
@@ -42,7 +44,8 @@
         false,
         false,
         false
-      ]
+      ],
+      "autoRule": "none"
     },
     {
       "id": 1791986652987,
@@ -56,7 +59,8 @@
         false,
         false,
         false
-      ]
+      ],
+      "autoRule": "none"
     },
     {
       "id": 1791986656684,
@@ -70,7 +74,8 @@
         false,
         false,
         false
-      ]
+      ],
+      "autoRule": "none"
     },
     {
       "id": 1791986670983,
@@ -84,7 +89,8 @@
         false,
         false,
         false
-      ]
+      ],
+      "autoRule": "none"
     },
     {
       "id": 1791986679057,
@@ -98,7 +104,8 @@
         false,
         false,
         false
-      ]
+      ],
+      "autoRule": "none"
     },
     {
       "id": 1791986686164,
@@ -112,7 +119,8 @@
         false,
         false,
         false
-      ]
+      ],
+      "autoRule": "none"
     },
     {
       "id": 1791986690108,
@@ -126,7 +134,8 @@
         false,
         false,
         false
-      ]
+      ],
+      "autoRule": "none"
     },
     {
       "id": 1791987972463,
@@ -140,9 +149,101 @@
         false,
         false,
         false
-      ]
+      ],
+      "autoRule": "none"
     }
   ],
+  "garminWeek": [
+    {
+      "sport": "none",
+      "title": "",
+      "distanceKm": 0,
+      "durationMin": 0,
+      "avgHr": 0,
+      "sleepHours": 0,
+      "sleepScore": 0,
+      "restingHr": 0,
+      "bodyBattery": 0,
+      "steps": 0
+    },
+    {
+      "sport": "none",
+      "title": "",
+      "distanceKm": 0,
+      "durationMin": 0,
+      "avgHr": 0,
+      "sleepHours": 0,
+      "sleepScore": 0,
+      "restingHr": 0,
+      "bodyBattery": 0,
+      "steps": 0
+    },
+    {
+      "sport": "none",
+      "title": "",
+      "distanceKm": 0,
+      "durationMin": 0,
+      "avgHr": 0,
+      "sleepHours": 0,
+      "sleepScore": 0,
+      "restingHr": 0,
+      "bodyBattery": 0,
+      "steps": 0
+    },
+    {
+      "sport": "none",
+      "title": "",
+      "distanceKm": 0,
+      "durationMin": 0,
+      "avgHr": 0,
+      "sleepHours": 0,
+      "sleepScore": 0,
+      "restingHr": 0,
+      "bodyBattery": 0,
+      "steps": 0
+    },
+    {
+      "sport": "none",
+      "title": "",
+      "distanceKm": 0,
+      "durationMin": 0,
+      "avgHr": 0,
+      "sleepHours": 0,
+      "sleepScore": 0,
+      "restingHr": 0,
+      "bodyBattery": 0,
+      "steps": 0
+    },
+    {
+      "sport": "none",
+      "title": "",
+      "distanceKm": 0,
+      "durationMin": 0,
+      "avgHr": 0,
+      "sleepHours": 0,
+      "sleepScore": 0,
+      "restingHr": 0,
+      "bodyBattery": 0,
+      "steps": 0
+    },
+    {
+      "sport": "none",
+      "title": "",
+      "distanceKm": 0,
+      "durationMin": 0,
+      "avgHr": 0,
+      "sleepHours": 0,
+      "sleepScore": 0,
+      "restingHr": 0,
+      "bodyBattery": 0,
+      "steps": 0
+    }
+  ],
+  "garminConfigSync": {
+    "corsMode": "auto",
+    "customBaseUrl": "",
+    "hasKeyConfigured": true
+  },
   "history": {
     "2026-10-12": {
       "weekKey": "2026-10-12",
@@ -319,7 +420,7 @@
       "shortLabel": "Sem 3 (19/10)",
       "fullLabel": "Semana 3 (19/10 a 25/10)",
       "rangeLabel": "19/10 a 25/10",
-      "archivedAt": "2026-10-23T12:43:52.372Z",
+      "archivedAt": "2026-10-23T13:15:24.552Z",
       "isSample": false,
       "habits": [
         {
@@ -334,7 +435,8 @@
             false,
             false,
             false
-          ]
+          ],
+          "autoRule": "garmin_workout"
         },
         {
           "id": 1791986640188,
@@ -348,7 +450,8 @@
             true,
             false,
             false
-          ]
+          ],
+          "autoRule": "none"
         },
         {
           "id": 1791986644500,
@@ -362,7 +465,8 @@
             false,
             false,
             false
-          ]
+          ],
+          "autoRule": "none"
         },
         {
           "id": 1791986652987,
@@ -376,7 +480,8 @@
             false,
             false,
             false
-          ]
+          ],
+          "autoRule": "none"
         },
         {
           "id": 1791986656684,
@@ -390,7 +495,8 @@
             false,
             false,
             false
-          ]
+          ],
+          "autoRule": "none"
         },
         {
           "id": 1791986670983,
@@ -404,7 +510,8 @@
             false,
             false,
             false
-          ]
+          ],
+          "autoRule": "none"
         },
         {
           "id": 1791986679057,
@@ -418,7 +525,8 @@
             false,
             false,
             false
-          ]
+          ],
+          "autoRule": "none"
         },
         {
           "id": 1791986686164,
@@ -432,7 +540,8 @@
             false,
             false,
             false
-          ]
+          ],
+          "autoRule": "none"
         },
         {
           "id": 1791986690108,
@@ -446,7 +555,8 @@
             false,
             false,
             false
-          ]
+          ],
+          "autoRule": "none"
         },
         {
           "id": 1791987972463,
@@ -460,7 +570,94 @@
             false,
             false,
             false
-          ]
+          ],
+          "autoRule": "none"
+        }
+      ],
+      "garminWeek": [
+        {
+          "sport": "none",
+          "title": "",
+          "distanceKm": 0,
+          "durationMin": 0,
+          "avgHr": 0,
+          "sleepHours": 0,
+          "sleepScore": 0,
+          "restingHr": 0,
+          "bodyBattery": 0,
+          "steps": 0
+        },
+        {
+          "sport": "none",
+          "title": "",
+          "distanceKm": 0,
+          "durationMin": 0,
+          "avgHr": 0,
+          "sleepHours": 0,
+          "sleepScore": 0,
+          "restingHr": 0,
+          "bodyBattery": 0,
+          "steps": 0
+        },
+        {
+          "sport": "none",
+          "title": "",
+          "distanceKm": 0,
+          "durationMin": 0,
+          "avgHr": 0,
+          "sleepHours": 0,
+          "sleepScore": 0,
+          "restingHr": 0,
+          "bodyBattery": 0,
+          "steps": 0
+        },
+        {
+          "sport": "none",
+          "title": "",
+          "distanceKm": 0,
+          "durationMin": 0,
+          "avgHr": 0,
+          "sleepHours": 0,
+          "sleepScore": 0,
+          "restingHr": 0,
+          "bodyBattery": 0,
+          "steps": 0
+        },
+        {
+          "sport": "none",
+          "title": "",
+          "distanceKm": 0,
+          "durationMin": 0,
+          "avgHr": 0,
+          "sleepHours": 0,
+          "sleepScore": 0,
+          "restingHr": 0,
+          "bodyBattery": 0,
+          "steps": 0
+        },
+        {
+          "sport": "none",
+          "title": "",
+          "distanceKm": 0,
+          "durationMin": 0,
+          "avgHr": 0,
+          "sleepHours": 0,
+          "sleepScore": 0,
+          "restingHr": 0,
+          "bodyBattery": 0,
+          "steps": 0
+        },
+        {
+          "sport": "none",
+          "title": "",
+          "distanceKm": 0,
+          "durationMin": 0,
+          "avgHr": 0,
+          "sleepHours": 0,
+          "sleepScore": 0,
+          "restingHr": 0,
+          "bodyBattery": 0,
+          "steps": 0
         }
       ]
     }
