@@ -6,8 +6,8 @@
   <meta name="theme-color" content="#0f172a" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <meta name="apple-mobile-web-app-title" content="Meus Hábitos" />
-  <title>Painel de Hábitos, Histórico & Constância</title>
+  <meta name="apple-mobile-web-app-title" content="Super Tracker" />
+  <title>Super Tracker: Hábitos, Garmin API Pessoal & Constância</title>
   <style>
     :root {
       --bg-primary: #0f172a;
@@ -18,6 +18,8 @@
       --text-secondary: #94a3b8;
       --accent: #38bdf8;
       --accent-hover: #0284c7;
+      --garmin: #007cc3;
+      --garmin-light: #38bdf8;
       --success: #10b981;
       --warning: #f59e0b;
       --danger: #ef4444;
@@ -49,7 +51,6 @@
       padding: calc(env(safe-area-inset-top, 16px) + 12px) 14px calc(env(safe-area-inset-bottom, 24px) + 24px);
     }
 
-    /* Proteção visual para a barra de status do iOS ao rolar a página */
     .ios-status-bar-shield {
       position: fixed;
       top: 0;
@@ -69,10 +70,10 @@
       margin: 0 auto;
     }
 
-    /* Previne qualquer item de Grid ou Flex de estourar a largura da tela no celular */
     .main-grid > *,
     .history-layout > *,
     .kpi-grid > *,
+    .garmin-grid > *,
     .category-cards-grid > *,
     .card,
     .kpi-card,
@@ -99,7 +100,7 @@
     }
 
     .header-title h1 {
-      font-size: 1.4rem;
+      font-size: 1.38rem;
       font-weight: 800;
       letter-spacing: -0.02em;
       display: flex;
@@ -110,7 +111,7 @@
 
     .header-title p {
       color: var(--text-secondary);
-      font-size: 0.84rem;
+      font-size: 0.83rem;
       margin-top: 4px;
       word-wrap: break-word;
     }
@@ -138,7 +139,7 @@
       gap: 6px;
       padding: 5px 11px;
       border-radius: 99px;
-      font-size: 0.75rem;
+      font-size: 0.74rem;
       font-weight: 600;
       border: 1px solid var(--border);
       background: #0f172a;
@@ -172,7 +173,7 @@
       border: 1px solid var(--border);
       padding: 9px 13px;
       border-radius: 10px;
-      font-size: 0.82rem;
+      font-size: 0.81rem;
       font-weight: 600;
       cursor: pointer;
       transition: all 0.2s ease;
@@ -198,6 +199,17 @@
       color: #fff;
     }
 
+    .btn-garmin {
+      background: rgba(0, 124, 195, 0.22);
+      color: #7dd3fc;
+      border-color: rgba(56, 189, 248, 0.45);
+    }
+
+    .btn-garmin:hover {
+      background: rgba(0, 124, 195, 0.38);
+      color: #fff;
+    }
+
     .btn-danger {
       color: #fca5a5;
       border-color: #7f1d1d;
@@ -208,7 +220,7 @@
       color: #fff;
     }
 
-    /* Main Navigation Tabs (Corrigido para nunca sobrepor no celular) */
+    /* Main Navigation Tabs */
     .nav-tabs {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -265,23 +277,113 @@
       white-space: nowrap;
     }
 
-    /* Banner Virada Automática */
-    .rollover-toast {
-      display: none;
-      background: rgba(16, 185, 129, 0.12);
-      border: 1px solid rgba(16, 185, 129, 0.45);
-      color: #d1fae5;
-      padding: 14px;
-      border-radius: 12px;
+    /* Garmin Super Tracker Hub */
+    .garmin-hub {
+      background: linear-gradient(145deg, rgba(15, 23, 42, 0.96), rgba(30, 41, 59, 0.92));
+      border: 1px solid rgba(56, 189, 248, 0.4);
+      border-radius: var(--radius);
+      padding: 16px;
       margin-bottom: 18px;
-      align-items: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .garmin-hub-header {
+      display: flex;
       justify-content: space-between;
-      gap: 12px;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .garmin-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 1rem;
+      font-weight: 800;
+      color: #f8fafc;
       flex-wrap: wrap;
     }
 
-    .rollover-toast.show {
+    .garmin-pill {
+      background: rgba(0, 124, 195, 0.25);
+      border: 1px solid rgba(56, 189, 248, 0.4);
+      color: #7dd3fc;
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 3px 9px;
+      border-radius: 99px;
+      letter-spacing: 0.02em;
+    }
+
+    .garmin-pill.active-key {
+      background: rgba(16, 185, 129, 0.16);
+      border-color: rgba(16, 185, 129, 0.45);
+      color: #34d399;
+    }
+
+    .garmin-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+    }
+
+    @media (max-width: 900px) {
+      .garmin-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    .garmin-metric-card {
+      background: rgba(15, 23, 42, 0.75);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px;
       display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 4px;
+    }
+
+    .garmin-metric-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.72rem;
+      color: var(--text-secondary);
+      font-weight: 600;
+    }
+
+    .garmin-metric-val {
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: var(--text-primary);
+      margin-top: 2px;
+      word-wrap: break-word;
+    }
+
+    .garmin-metric-sub {
+      font-size: 0.72rem;
+      color: var(--text-secondary);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      flex-wrap: wrap;
+    }
+
+    .auto-check-tag {
+      background: rgba(16, 185, 129, 0.16);
+      color: #34d399;
+      border: 1px solid rgba(16, 185, 129, 0.35);
+      padding: 1px 6px;
+      border-radius: 99px;
+      font-size: 0.68rem;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
     }
 
     /* KPI Grid */
@@ -410,7 +512,6 @@
       margin-top: 2px;
     }
 
-    /* Day Selector (7 dias ocupa 100% no celular sem cortar) */
     .day-selector {
       display: grid;
       grid-template-columns: repeat(7, 1fr);
@@ -483,7 +584,7 @@
 
     @media (min-width: 640px) {
       .input-field {
-        flex: 1 1 200px;
+        flex: 1 1 180px;
       }
       .select-field {
         flex: 0 0 auto;
@@ -600,11 +701,6 @@
       flex-shrink: 0;
     }
 
-    .delete-btn:hover {
-      color: var(--danger);
-      background: rgba(239, 68, 68, 0.12);
-    }
-
     /* Chart Area */
     .chart-container {
       display: flex;
@@ -690,9 +786,7 @@
       flex-wrap: wrap;
     }
 
-    /* =====================================================
-       MATRIZ SEMANAL RESPONSIVA (SEM CORTAR NO CELULAR!)
-       ===================================================== */
+    /* Responsive Matrix */
     .responsive-matrix-list {
       display: flex;
       flex-direction: column;
@@ -799,9 +893,7 @@
       border-color: var(--accent);
     }
 
-    /* ==========================================
-       HISTÓRICO & PASTAS (MÊS -> SEMANA)
-       ========================================== */
+    /* History Layout */
     .history-layout {
       display: grid;
       grid-template-columns: 320px 1fr;
@@ -892,7 +984,6 @@
       flex-shrink: 0;
     }
 
-    /* Gráficos de Categoria */
     .comp-bars-list {
       display: flex;
       flex-direction: column;
@@ -933,7 +1024,6 @@
       transition: width 0.45s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
-    /* Grid de Categorias Individuais (1 coluna no celular, 2 no PC) */
     .category-cards-grid {
       display: grid;
       grid-template-columns: 1fr;
@@ -1092,7 +1182,7 @@
       background: var(--bg-card);
       border: 1px solid var(--border);
       border-radius: 16px;
-      max-width: 500px;
+      max-width: 560px;
       width: 100%;
       padding: 20px;
       box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
@@ -1112,6 +1202,33 @@
       font-weight: 700;
     }
 
+    .modal-subtabs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+      background: #0f172a;
+      padding: 4px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      margin-bottom: 14px;
+    }
+
+    .modal-subtab {
+      background: transparent;
+      border: none;
+      color: var(--text-secondary);
+      padding: 8px;
+      border-radius: 7px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .modal-subtab.active {
+      background: var(--accent);
+      color: #0f172a;
+    }
+
     .form-group {
       margin-bottom: 12px;
     }
@@ -1124,7 +1241,7 @@
       margin-bottom: 5px;
     }
 
-    .form-group input {
+    .form-group input, .form-group select {
       width: 100%;
     }
 
@@ -1138,6 +1255,40 @@
       margin-bottom: 14px;
       line-height: 1.5;
     }
+
+    .help-box code {
+      color: var(--accent);
+      background: rgba(56, 189, 248, 0.12);
+      padding: 1px 5px;
+      border-radius: 4px;
+    }
+
+    .garmin-official-card {
+      background: #0f172a;
+      border: 1px solid rgba(56, 189, 248, 0.4);
+      border-radius: 12px;
+      padding: 14px;
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .api-log-box {
+      background: #090d16;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px;
+      font-family: monospace;
+      font-size: 0.72rem;
+      color: #94a3b8;
+      margin-top: 10px;
+      max-height: 110px;
+      overflow-y: auto;
+      display: none;
+    }
   </style>
 </head>
 <body>
@@ -1147,37 +1298,24 @@
     <header>
       <div class="header-title">
         <h1>
-          ⚡ Painel de Hábitos
+          ⚡ Super Tracker
           <span id="syncBadge" class="sync-badge" onclick="openSyncModal()">
             ☁️ Configurar GitHub Sync
           </span>
         </h1>
-        <p id="currentWeekSubtitle">Semana Atual • Sincronizado entre PC e Celular</p>
+        <p id="currentWeekSubtitle">Semana Atual • Hábitos + Chave de API Pessoal Garmin</p>
       </div>
       <div class="header-actions">
-        <button class="btn" style="flex:1;" onclick="manualPullFromGitHub()">🔄 Sincronizar</button>
-        <button class="btn" style="flex:1;" onclick="openSyncModal()">⚙️ Nuvem / Backup</button>
+        <button class="btn btn-garmin" style="flex:1;" onclick="openGarminModal('api')">🔑 Chave API Pessoal</button>
+        <button class="btn" style="flex:1;" onclick="manualPullAll()">🔄 Sincronizar</button>
+        <button class="btn" onclick="openSyncModal()">⚙️</button>
       </div>
     </header>
 
-    <!-- Notificação quando ocorre virada automática de semana -->
-    <div id="rolloverToast" class="rollover-toast">
-      <div>
-        <strong>🎉 Nova semana iniciada automaticamente!</strong>
-        <div style="font-size: 0.82rem; color: #a7f3d0;" id="rolloverToastText">
-          A semana anterior foi arquivada na pasta do mês no Histórico e os gráficos de categoria já estão prontos.
-        </div>
-      </div>
-      <div style="display:flex; gap:8px; width:100%;">
-        <button class="btn btn-primary" style="flex:1;" onclick="switchMainTab('history')">📊 Ver Relatório</button>
-        <button class="btn" onclick="document.getElementById('rolloverToast').classList.remove('show')">Fechar</button>
-      </div>
-    </div>
-
-    <!-- Navegação Principal (2 colunas perfeitamente alinhadas no celular) -->
+    <!-- Navegação Principal -->
     <div class="nav-tabs">
       <button class="nav-tab active" id="tabBtnCurrent" onclick="switchMainTab('current')">
-        <span>⚡ Semana Atual</span>
+        <span>⚡ Semana Atual & Garmin</span>
       </button>
       <button class="nav-tab" id="tabBtnHistory" onclick="switchMainTab('history')">
         <span>📁 Histórico & Categorias</span>
@@ -1186,9 +1324,77 @@
     </div>
 
     <!-- ==========================================
-         VISÃO 1: SEMANA ATUAL
+         VISÃO 1: SEMANA ATUAL + GARMIN HUB
          ========================================== -->
     <div id="viewCurrent">
+      <!-- GARMIN CONNECT TELEMETRY HUB -->
+      <section class="garmin-hub">
+        <div class="garmin-hub-header">
+          <div class="garmin-title">
+            <span>⌚ Garmin Connect</span>
+            <span class="garmin-pill" id="garminDayBadge">Hoje</span>
+            <span class="garmin-pill" id="garminApiStatusBadge" style="cursor:pointer;" onclick="openGarminModal('api')">
+              🔑 Colar Chave de API Pessoal
+            </span>
+          </div>
+          <div style="display:flex; gap:6px; flex-wrap:wrap;">
+            <button class="btn btn-garmin" style="padding:6px 10px; font-size:0.75rem;" onclick="pullFromWatchApiDirect(false)">
+              ⚡ Sincronizar Chave Garmin
+            </button>
+            <button class="btn" style="padding:6px 10px; font-size:0.75rem;" onclick="openGarminModal('manual')">
+              ✏️ Editar Dia
+            </button>
+          </div>
+        </div>
+
+        <div class="garmin-grid">
+          <div class="garmin-metric-card">
+            <div class="garmin-metric-top">
+              <span>ATIVIDADE DO DIA</span>
+              <span id="gmSportIcon">🏃</span>
+            </div>
+            <div class="garmin-metric-val" id="gmActivityTitle">Sem treino</div>
+            <div class="garmin-metric-sub" id="gmActivitySub">
+              <span>0 km • 0 min</span>
+            </div>
+          </div>
+
+          <div class="garmin-metric-card">
+            <div class="garmin-metric-top">
+              <span>SONO & RECUPERAÇÃO</span>
+              <span>😴</span>
+            </div>
+            <div class="garmin-metric-val" id="gmSleepVal">0h 00m</div>
+            <div class="garmin-metric-sub" id="gmSleepSub">
+              <span>Score: —</span>
+            </div>
+          </div>
+
+          <div class="garmin-metric-card">
+            <div class="garmin-metric-top">
+              <span>FC REPOUSO & BATERIA</span>
+              <span>❤️</span>
+            </div>
+            <div class="garmin-metric-val" id="gmHrVal">— bpm</div>
+            <div class="garmin-metric-sub" id="gmHrSub">
+              <span>Body Battery: —</span>
+            </div>
+          </div>
+
+          <div class="garmin-metric-card">
+            <div class="garmin-metric-top">
+              <span>PASSOS & VOLUME SEMANAL</span>
+              <span>👣</span>
+            </div>
+            <div class="garmin-metric-val" id="gmStepsVal">0</div>
+            <div class="garmin-metric-sub" id="gmWeeklyVolSub">
+              <span>Semana: 0 km • 0h treino</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- KPI Cards -->
       <section class="kpi-grid">
         <div class="kpi-card">
           <span class="kpi-label" id="kpiDayLabel">Metas de Hoje</span>
@@ -1232,7 +1438,7 @@
           <div class="card-header">
             <div>
               <div class="card-title">🎯 Metas Diárias</div>
-              <div class="card-subtitle">Toque para concluir ou adicione novas metas</div>
+              <div class="card-subtitle">Metas com ⌚ recebem Auto-Check pela sua Chave Pessoal!</div>
             </div>
             <div class="day-selector" id="daySelector"></div>
           </div>
@@ -1252,6 +1458,12 @@
               <option value="💼 Carreira">💼 Carreira</option>
               <option value="🧘 Mente">🧘 Mente</option>
             </select>
+            <select id="habitAutoRule" class="select-field" title="Regra de Auto-Check pelo Garmin">
+              <option value="none">🖐️ Check Manual</option>
+              <option value="garmin_workout">⌚ Auto: Qualquer Treino Garmin</option>
+              <option value="garmin_sleep">⌚ Auto: Sono ≥ 7h30 no Garmin</option>
+              <option value="garmin_steps">⌚ Auto: Passos ≥ 8.000 no Garmin</option>
+            </select>
             <button type="submit" class="btn btn-primary" style="flex:1;">+ Adicionar</button>
           </form>
 
@@ -1263,7 +1475,7 @@
           <div class="card-header">
             <div>
               <div class="card-title">📊 Sequência da Semana Atual</div>
-              <div class="card-subtitle">Toque nas barras para alternar o dia visualizado</div>
+              <div class="card-subtitle">Toque nas barras para ver os hábitos e dados do Garmin daquele dia</div>
             </div>
           </div>
 
@@ -1272,13 +1484,13 @@
           </div>
 
           <div class="streak-banner">
-            <span>💡 Virada automática toda <strong>Segunda</strong>!</span>
+            <span>💡 Sua <strong>Chave de API Pessoal</strong> sincroniza com o GitHub!</span>
             <span id="perfectDaysBadge" style="color: var(--success); font-weight: 700;">0 dias 100%</span>
           </div>
         </div>
       </div>
 
-      <!-- Matriz da Semana (100% responsiva sem estourar tela no celular) -->
+      <!-- Matriz da Semana -->
       <div class="card">
         <div class="card-header">
           <div>
@@ -1297,11 +1509,10 @@
     </div>
 
     <!-- ==========================================
-         VISÃO 2: HISTÓRICO (PASTAS MÊS -> SEMANA) & CATEGORIAS
+         VISÃO 2: HISTÓRICO & CATEGORIAS
          ========================================== -->
     <div id="viewHistory" style="display: none;">
       <div class="history-layout">
-        <!-- Coluna Esquerda: Explorador de Pastas (Mês -> Semana) -->
         <div class="card">
           <div class="card-header">
             <div>
@@ -1322,9 +1533,7 @@
           </div>
         </div>
 
-        <!-- Coluna Direita: Relatório da Semana Selecionada + Gráficos de Categorias -->
         <div style="display: flex; flex-direction: column; gap: 16px; min-width: 0; width: 100%;">
-          <!-- Card 1: Comparativo entre Categorias -->
           <div class="card">
             <div class="card-header">
               <div>
@@ -1339,21 +1548,17 @@
             <div class="comp-bars-list" id="categoryComparisonChart"></div>
           </div>
 
-          <!-- Card 2: Gráficos Individuais de Cada Categoria (Avaliação de Constância) -->
           <div class="card">
             <div class="card-header">
               <div>
                 <div class="card-title">📈 Constância por Categoria</div>
-                <div class="card-subtitle">
-                  Evolução entre semanas e frequência diária (Seg a Dom)
-                </div>
+                <div class="card-subtitle">Evolução entre semanas e frequência diária (Seg a Dom)</div>
               </div>
             </div>
 
             <div class="category-cards-grid" id="individualCategoryCharts"></div>
           </div>
 
-          <!-- Card 3: Check-ins Arquivados na Semana (Sem cortar lateralmente!) -->
           <div class="card">
             <div class="card-header">
               <div>
@@ -1368,7 +1573,165 @@
     </div>
   </div>
 
-  <!-- Modal: GitHub Cloud Memory & Backup -->
+  <!-- Modal 1: Central Garmin (Nativo para a Chave de API Pessoal do Garmin Connect) -->
+  <div class="modal-backdrop" id="garminModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2>🔑 Chave de API Pessoal — Garmin Connect</h2>
+        <button class="delete-btn" onclick="closeGarminModal()">✕</button>
+      </div>
+
+      <div class="modal-subtabs">
+        <button type="button" class="modal-subtab active" id="subtabBtnApi" onclick="switchGarminModalTab('api')">
+          🔑 Chave de API Pessoal
+        </button>
+        <button type="button" class="modal-subtab" id="subtabBtnManual" onclick="switchGarminModalTab('manual')">
+          ✏️ Editar Dia (<span id="garminModalDayName">Hoje</span>)
+        </button>
+      </div>
+
+      <!-- SUB-ABA 1: CHAVE DE API PESSOAL DO GARMIN CONNECT -->
+      <div id="garminTabApi">
+        <div class="garmin-official-card">
+          <div style="display:flex; align-items:center; gap:10px;">
+            <div style="width:38px; height:38px; border-radius:50%; background:#007cc3; display:flex; align-items:center; justify-content:center; font-size:1.1rem;">
+              👤🔑
+            </div>
+            <div>
+              <div style="font-weight:700; font-size:0.9rem;">Chave de API pessoal (Garmin Connect)</div>
+              <div style="font-size:0.74rem; color:var(--text-secondary);" id="garminKeyCardSub">
+                Gerada em Configurações &rarr; Chave de API pessoal
+              </div>
+            </div>
+          </div>
+          <span class="garmin-pill" id="modalKeyActiveIndicator">Não configurada</span>
+        </div>
+
+        <form onsubmit="saveWatchApiConfig(event)">
+          <div class="form-group">
+            <label>Cole sua Chave de API Pessoal do Garmin Connect</label>
+            <input
+              type="password"
+              id="garminPersonalKeyInput"
+              class="input-field"
+              placeholder="Cole aqui a chave gerada no Garmin Connect..."
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label>Modo de Conexão da Chave</label>
+            <select id="garminCorsMode" class="select-field" onchange="toggleCustomEndpointField()">
+              <option value="auto">⚡ Automático (Direto + Fallback Ponte Anti-CORS para GitHub Pages)</option>
+              <option value="direct">🌐 Direto Puro (Sem intermediário CORS)</option>
+              <option value="custom">🔗 Endpoint Específico (Informar URL customizada)</option>
+            </select>
+          </div>
+
+          <div class="form-group" id="customEndpointGroup" style="display:none;">
+            <label>URL Base da API (Opcional)</label>
+            <input
+              type="url"
+              id="garminCustomBaseUrl"
+              class="input-field"
+              placeholder="https://connectapi.garmin.com"
+            />
+          </div>
+
+          <div class="form-group" style="display:flex; align-items:center; gap:8px; margin-top:8px;">
+            <input type="checkbox" id="syncGarminKeyToGithub" checked style="width:18px; height:18px;" />
+            <label for="syncGarminKeyToGithub" style="margin:0; cursor:pointer; font-size:0.78rem;">
+              Salvar configuração no meu repositório (conecta celular e PC automaticamente)
+            </label>
+          </div>
+
+          <div class="api-log-box" id="apiLogBox"></div>
+
+          <div style="display:flex; gap:8px; justify-content:space-between; margin-top:14px; flex-wrap:wrap;">
+            <button type="button" class="btn btn-danger" onclick="disconnectWatchApi()">Remover Chave</button>
+            <button type="submit" class="btn btn-primary" style="flex:1;">
+              🔑 Ativar Chave & Puxar Dados
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- SUB-ABA 2: EDIÇÃO MANUAL OU SIMULAÇÃO DO DIA -->
+      <div id="garminTabManual" style="display:none;">
+        <form onsubmit="saveGarminDayForm(event)">
+          <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+            <div class="form-group">
+              <label>Modalidade do Treino</label>
+              <select id="gmFormSport" class="select-field">
+                <option value="none">— Descanso / Sem Treino —</option>
+                <option value="run">🏃 Corrida (Run)</option>
+                <option value="bike">🚴 Ciclismo (Bike)</option>
+                <option value="swim">🏊 Natação (Swim)</option>
+                <option value="tri">🔱 Triathlon / Brick</option>
+                <option value="gym">🏋️ Força / Academia</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Nome do Treino (Garmin)</label>
+              <input type="text" id="gmFormTitle" class="input-field" placeholder="ex: Rodagem Z2 / Tiros" />
+            </div>
+          </div>
+
+          <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:10px;">
+            <div class="form-group">
+              <label>Distância (km)</label>
+              <input type="number" step="0.01" id="gmFormDist" class="input-field" placeholder="ex: 10.5" />
+            </div>
+            <div class="form-group">
+              <label>Duração (min)</label>
+              <input type="number" id="gmFormDur" class="input-field" placeholder="ex: 52" />
+            </div>
+            <div class="form-group">
+              <label>FC Média (bpm)</label>
+              <input type="number" id="gmFormAvgHr" class="input-field" placeholder="ex: 154" />
+            </div>
+          </div>
+
+          <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+            <div class="form-group">
+              <label>Horas de Sono (ex: 7.75 = 7h45)</label>
+              <input type="number" step="0.1" id="gmFormSleepHrs" class="input-field" placeholder="ex: 7.8" />
+            </div>
+            <div class="form-group">
+              <label>Sleep Score (0-100)</label>
+              <input type="number" id="gmFormSleepScore" class="input-field" placeholder="ex: 86" />
+            </div>
+          </div>
+
+          <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:10px;">
+            <div class="form-group">
+              <label>FC Repouso (bpm)</label>
+              <input type="number" id="gmFormRhr" class="input-field" placeholder="ex: 48" />
+            </div>
+            <div class="form-group">
+              <label>Body Battery (%)</label>
+              <input type="number" id="gmFormBb" class="input-field" placeholder="ex: 88" />
+            </div>
+            <div class="form-group">
+              <label>Passos no Dia</label>
+              <input type="number" id="gmFormSteps" class="input-field" placeholder="ex: 11200" />
+            </div>
+          </div>
+
+          <div style="display: flex; gap: 8px; justify-content: space-between; margin-top: 12px; flex-wrap: wrap;">
+            <button type="button" class="btn btn-garmin" onclick="simulateGarminWatchSync()">
+              ⌚ Preencher Teste
+            </button>
+            <button type="submit" class="btn btn-primary" style="flex:1;">
+              💾 Salvar & Executar Auto-Check
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal 2: GitHub Cloud Memory & Backup -->
   <div class="modal-backdrop" id="syncModal">
     <div class="modal-card">
       <div class="modal-header">
@@ -1377,7 +1740,7 @@
       </div>
 
       <div class="help-box">
-        O arquivo <code>memoria.json</code> guarda tanto a sua <strong>Semana Atual</strong> quanto todo o seu <strong>Histórico de Meses e Semanas</strong>.
+        O arquivo <code>memoria.json</code> guarda sua <strong>Semana Atual</strong>, a <strong>Telemetria do Garmin</strong> e todo o seu <strong>Histórico de Meses e Semanas</strong>.
       </div>
 
       <form onsubmit="saveGitHubConfig(event)">
@@ -1420,7 +1783,6 @@
   </div>
 
   <script>
-    // Configura PWA para celular
     (function setupPWA() {
       const iconSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120"><rect width="120" height="120" rx="26" fill="#0f172a"/><path d="M68 18L30 68h28l-6 34 38-50H62l6-34z" fill="#38bdf8"/></svg>`;
       const iconUrl = "data:image/svg+xml;base64," + btoa(iconSvg);
@@ -1431,8 +1793,8 @@
       document.head.appendChild(appleIcon);
 
       const manifest = {
-        name: "Painel de Hábitos & Constância",
-        short_name: "Hábitos",
+        name: "Super Tracker: Hábitos & Garmin",
+        short_name: "SuperTracker",
         start_url: ".",
         display: "standalone",
         background_color: "#0f172a",
@@ -1460,16 +1822,41 @@
       '🧘 Mente':    { color: '#ec4899', bg: 'rgba(236, 72, 153, 0.15)' }
     };
 
+    const SPORT_ICONS = {
+      none: '⏸️',
+      run: '🏃',
+      bike: '🚴',
+      swim: '🏊',
+      tri: '🔱',
+      gym: '🏋️'
+    };
+
     const STORAGE_KEY = 'painel_habitos_v2_data';
     const GH_CONFIG_KEY = 'painel_habitos_v2_gh_config';
+    const GARMIN_PERSONAL_KEY_STORAGE = 'painel_habitos_v7_garmin_key';
 
     const DEFAULT_HABITS = [
-      { id: 1, name: 'Treino do Dia (Swim / Bike / Run)', category: '🏃 Esporte', days: [true, true, true, false, false, false, false] },
-      { id: 2, name: 'Hidratação (3L) + Eletrólitos / Suplementos', category: '💧 Saúde', days: [true, true, true, false, false, false, false] },
-      { id: 3, name: 'Prática de Idiomas (Francês / Espanhol 15m)', category: '📚 Estudo', days: [true, false, true, false, false, false, false] },
-      { id: 4, name: 'Leitura / Revisão da Faculdade (RI)', category: '📚 Estudo', days: [true, true, false, false, false, false, false] },
-      { id: 5, name: 'Sono Reparador (7h30+) & Mobilidade', category: '🧘 Mente', days: [true, true, true, false, false, false, false] }
+      { id: 1, name: 'Treino do Dia (Swim / Bike / Run)', category: '🏃 Esporte', autoRule: 'garmin_workout', days: [true, true, true, false, false, false, false] },
+      { id: 2, name: 'Hidratação (3L) + Eletrólitos / Suplementos', category: '💧 Saúde', autoRule: 'none', days: [true, true, true, false, false, false, false] },
+      { id: 3, name: 'Prática de Idiomas (Francês / Espanhol 15m)', category: '📚 Estudo', autoRule: 'none', days: [true, false, true, false, false, false, false] },
+      { id: 4, name: 'Leitura / Revisão da Faculdade (RI)', category: '📚 Estudo', autoRule: 'none', days: [true, true, false, false, false, false, false] },
+      { id: 5, name: 'Sono Reparador (7h30+) & Mobilidade', category: '🧘 Mente', autoRule: 'garmin_sleep', days: [true, true, true, false, false, false, false] }
     ];
+
+    function createEmptyGarminWeek() {
+      return DAYS.map(() => ({
+        sport: 'none',
+        title: '',
+        distanceKm: 0,
+        durationMin: 0,
+        avgHr: 0,
+        sleepHours: 0,
+        sleepScore: 0,
+        restingHr: 0,
+        bodyBattery: 0,
+        steps: 0
+      }));
+    }
 
     function getMondayDate(dateObj = new Date()) {
       const d = new Date(dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate());
@@ -1518,17 +1905,20 @@
 
     let appState = loadLocalState();
     let ghConfig = loadGhConfig();
+    let watchApiConfig = loadWatchApiConfig();
     let lastFileSha = null;
     let pushTimeout = null;
     let selectedHistoryWeekKey = appState.currentWeekKey;
     let openMonthFolders = {};
 
     function normalizeState(raw) {
+      const baseGarmin = createEmptyGarminWeek();
       if (!raw) {
         return {
           updatedAt: new Date().toISOString(),
           currentWeekKey: realCurrentWeekKey,
           habits: JSON.parse(JSON.stringify(DEFAULT_HABITS)),
+          garminWeek: baseGarmin,
           history: {}
         };
       }
@@ -1537,13 +1927,34 @@
           updatedAt: new Date().toISOString(),
           currentWeekKey: realCurrentWeekKey,
           habits: raw,
+          garminWeek: baseGarmin,
           history: {}
         };
       }
+      const habits = Array.isArray(raw.habits) ? raw.habits : JSON.parse(JSON.stringify(DEFAULT_HABITS));
+      habits.forEach(h => {
+        if (!h.autoRule) {
+          const lower = (h.name || '').toLowerCase();
+          if (lower.includes('treino') || lower.includes('swim') || lower.includes('corrida') || lower.includes('bike')) {
+            h.autoRule = 'garmin_workout';
+          } else if (lower.includes('sono')) {
+            h.autoRule = 'garmin_sleep';
+          } else {
+            h.autoRule = 'none';
+          }
+        }
+      });
+
+      const garminWeek = (Array.isArray(raw.garminWeek) && raw.garminWeek.length === 7)
+        ? raw.garminWeek
+        : baseGarmin;
+
       return {
         updatedAt: raw.updatedAt || new Date().toISOString(),
         currentWeekKey: raw.currentWeekKey || realCurrentWeekKey,
-        habits: Array.isArray(raw.habits) ? raw.habits : JSON.parse(JSON.stringify(DEFAULT_HABITS)),
+        habits,
+        garminWeek,
+        garminConfigSync: raw.garminConfigSync || null,
         history: (raw.history && typeof raw.history === 'object') ? raw.history : {}
       };
     }
@@ -1551,12 +1962,8 @@
     function loadLocalState() {
       try {
         const saved = localStorage.getItem(STORAGE_KEY);
-        if (saved) {
-          return normalizeState(JSON.parse(saved));
-        }
-      } catch (e) {
-        console.warn('Erro ao ler localStorage:', e);
-      }
+        if (saved) return normalizeState(JSON.parse(saved));
+      } catch (e) {}
       return normalizeState(null);
     }
 
@@ -1565,14 +1972,27 @@
         appState.updatedAt = new Date().toISOString();
         syncCurrentWeekToHistorySnapshot();
         localStorage.setItem(STORAGE_KEY, JSON.stringify(appState));
-      } catch (e) {
-        console.warn('Erro ao salvar localStorage:', e);
-      }
+      } catch (e) {}
     }
 
-    function createWeekSnapshot(weekKey, habitsList, isSample = false) {
+    function loadWatchApiConfig() {
+      try {
+        const saved = localStorage.getItem(GARMIN_PERSONAL_KEY_STORAGE);
+        if (saved) return JSON.parse(saved);
+      } catch (e) {}
+      return {
+        personalKey: '',
+        corsMode: 'auto',
+        customBaseUrl: ''
+      };
+    }
+
+    function isWatchApiConfigured() {
+      return Boolean(watchApiConfig && watchApiConfig.personalKey && watchApiConfig.personalKey.trim().length > 4);
+    }
+
+    function createWeekSnapshot(weekKey, habitsList, garminWeekData, isSample = false) {
       const meta = getWeekMetadata(weekKey);
-      const clonedHabits = JSON.parse(JSON.stringify(habitsList));
       return {
         weekKey: meta.weekKey,
         monthKey: meta.monthKey,
@@ -1583,7 +2003,8 @@
         rangeLabel: meta.rangeLabel,
         archivedAt: new Date().toISOString(),
         isSample: Boolean(isSample),
-        habits: clonedHabits
+        habits: JSON.parse(JSON.stringify(habitsList)),
+        garminWeek: JSON.parse(JSON.stringify(garminWeekData || createEmptyGarminWeek()))
       };
     }
 
@@ -1591,8 +2012,458 @@
       appState.history[appState.currentWeekKey] = createWeekSnapshot(
         appState.currentWeekKey,
         appState.habits,
+        appState.garminWeek,
         false
       );
+    }
+
+    // =====================================================
+    // INTEGRAÇÃO NATIVA: CHAVE DE API PESSOAL GARMIN CONNECT
+    // =====================================================
+    function mapExternalSportType(rawType) {
+      const t = String(rawType || '').toLowerCase();
+      if (t.includes('run') || t.includes('corrida') || t.includes('treadmill')) return 'run';
+      if (t.includes('ride') || t.includes('cycl') || t.includes('bike') || t.includes('biking')) return 'bike';
+      if (t.includes('swim') || t.includes('nat') || t.includes('lap_swimming') || t.includes('open_water')) return 'swim';
+      if (t.includes('tri') || t.includes('multi') || t.includes('brick') || t.includes('transition')) return 'tri';
+      if (t.includes('weight') || t.includes('strength') || t.includes('gym') || t.includes('fitness')) return 'gym';
+      return 'run';
+    }
+
+    function appendApiLog(msg) {
+      const box = document.getElementById('apiLogBox');
+      if (!box) return;
+      box.style.display = 'block';
+      const line = document.createElement('div');
+      line.textContent = `[${new Date().toLocaleTimeString('pt-BR')}] ${msg}`;
+      box.appendChild(line);
+      box.scrollTop = box.scrollHeight;
+    }
+
+    // Faz a chamada HTTP com a Chave de API Pessoal (tenta direto e, se o navegador bloquear por CORS, usa ponte HTTPS automaticamente)
+    async function fetchWithGarminPersonalKey(targetUrl, key, corsMode) {
+      const headers = {
+        'Authorization': `Bearer ${key}`,
+        'X-Garmin-Api-Key': key,
+        'api-key': key,
+        'DI-Backend': 'connectapi.garmin.com',
+        'Accept': 'application/json'
+      };
+
+      if (corsMode === 'direct' || corsMode === 'auto' || corsMode === 'custom') {
+        try {
+          const directRes = await fetch(targetUrl, { headers });
+          if (directRes.ok) {
+            return await directRes.json();
+          }
+        } catch (directErr) {
+          if (corsMode === 'direct') throw directErr;
+        }
+      }
+
+      // Fallback anti-CORS caso o navegador bloqueie chamada direta do domínio github.io para garmin.com
+      const proxyUrl = `https://corsproxy.io/?${encodeURIComponent(targetUrl)}`;
+      const proxyRes = await fetch(proxyUrl, { headers });
+      if (!proxyRes.ok) {
+        throw new Error(`HTTP ${proxyRes.status}`);
+      }
+      return await proxyRes.json();
+    }
+
+    // Interpreta qualquer formato JSON retornado pela API Pessoal do Garmin Connect
+    function parseGarminActivitiesPayload(payload, monDate) {
+      const list = Array.isArray(payload)
+        ? payload
+        : (payload && (payload.activityList || payload.activities || payload.data || []));
+      if (!Array.isArray(list)) return 0;
+
+      let count = 0;
+      for (let dIdx = 0; dIdx < 7; dIdx++) {
+        const dDate = new Date(monDate.getFullYear(), monDate.getMonth(), monDate.getDate() + dIdx);
+        const dKey = formatDateKey(dDate);
+
+        const dayActs = list.filter(a => {
+          const startStr = a.startTimeLocal || a.start_date_local || a.startTimeGMT || a.date || '';
+          return String(startStr).startsWith(dKey);
+        });
+
+        if (dayActs.length > 0) {
+          count += dayActs.length;
+          const mainAct = dayActs[0];
+          const gmDay = appState.garminWeek[dIdx] || {};
+          const rawType = (mainAct.activityType && mainAct.activityType.typeKey) || mainAct.activityType || mainAct.type || 'run';
+
+          gmDay.sport = dayActs.length > 1 ? 'tri' : mapExternalSportType(rawType);
+          gmDay.title = dayActs.map(a => a.activityName || a.name || 'Treino Garmin').join(' + ');
+
+          const totalMeters = dayActs.reduce((acc, a) => acc + (Number(a.distance) || 0), 0);
+          const totalSecs = dayActs.reduce((acc, a) => acc + (Number(a.duration || a.movingDuration || a.moving_time) || 0), 0);
+
+          gmDay.distanceKm = totalMeters > 100 ? Number((totalMeters / 1000).toFixed(2)) : Number(totalMeters.toFixed(2));
+          gmDay.durationMin = totalSecs > 180 ? Math.round(totalSecs / 60) : Math.round(totalSecs);
+          gmDay.avgHr = Math.round(mainAct.averageHR || mainAct.average_heartrate || 0);
+
+          appState.garminWeek[dIdx] = gmDay;
+        }
+      }
+      return count;
+    }
+
+    function parseGarminDailyWellnessPayload(payload, dIdx) {
+      if (!payload || typeof payload !== 'object') return false;
+      const gmDay = appState.garminWeek[dIdx] || {};
+      let updated = false;
+
+      // Formato Daily Summary / User Summary do Garmin Connect
+      const summary = payload.userDailySummary || payload.summary || payload;
+      if (summary.totalSteps || summary.steps) {
+        gmDay.steps = Math.round(summary.totalSteps || summary.steps);
+        updated = true;
+      }
+      if (summary.restingHeartRate || summary.restingHR) {
+        gmDay.restingHr = Math.round(summary.restingHeartRate || summary.restingHR);
+        updated = true;
+      }
+      if (summary.bodyBatteryHighestValue || summary.bodyBatteryMostRecentValue || summary.bodyBattery) {
+        gmDay.bodyBattery = Math.round(
+          summary.bodyBatteryHighestValue || summary.bodyBatteryMostRecentValue || summary.bodyBattery
+        );
+        updated = true;
+      }
+
+      // Formato Sleep DTO do Garmin Connect
+      const sleepDto = payload.dailySleepDTO || payload.sleep || payload;
+      if (sleepDto.sleepTimeSeconds || sleepDto.durationInSeconds) {
+        const secs = Number(sleepDto.sleepTimeSeconds || sleepDto.durationInSeconds);
+        gmDay.sleepHours = Number((secs / 3600).toFixed(2));
+        updated = true;
+      }
+      if (sleepDto.sleepScores && sleepDto.sleepScores.overall && sleepDto.sleepScores.overall.value) {
+        gmDay.sleepScore = Math.round(sleepDto.sleepScores.overall.value);
+        updated = true;
+      } else if (sleepDto.overallSleepScore || sleepDto.sleepScore) {
+        gmDay.sleepScore = Math.round(sleepDto.overallSleepScore || sleepDto.sleepScore);
+        updated = true;
+      }
+
+      appState.garminWeek[dIdx] = gmDay;
+      return updated;
+    }
+
+    async function pullFromWatchApiDirect(silent = false) {
+      const badge = document.getElementById('garminApiStatusBadge');
+      if (!isWatchApiConfigured()) {
+        if (!silent) openGarminModal('api');
+        return;
+      }
+
+      const key = watchApiConfig.personalKey.trim();
+      const corsMode = watchApiConfig.corsMode || 'auto';
+      const base = (watchApiConfig.customBaseUrl && watchApiConfig.customBaseUrl.trim())
+        ? watchApiConfig.customBaseUrl.trim().replace(/\/$/, '')
+        : 'https://connectapi.garmin.com';
+
+      if (badge) {
+        badge.textContent = '⏳ Sincronizando Chave Garmin...';
+        badge.classList.remove('active-key');
+      }
+      appendApiLog('Iniciando conexão com a Chave de API pessoal do Garmin Connect...');
+
+      const monDate = parseDateKey(appState.currentWeekKey);
+      const sunDate = new Date(monDate.getFullYear(), monDate.getMonth(), monDate.getDate() + 6);
+      const startDateStr = formatDateKey(monDate);
+      const endDateStr = formatDateKey(sunDate);
+
+      let anySuccess = false;
+
+      try {
+        // 1. Tenta buscar lista de atividades da semana na API do Garmin Connect
+        const actEndpoints = [
+          `${base}/activitylist-service/activities/search/activities?startDate=${startDateStr}&endDate=${endDateStr}&limit=30`,
+          `https://connect.garmin.com/modern/proxy/activitylist-service/activities/search/activities?startDate=${startDateStr}&endDate=${endDateStr}&limit=30`
+        ];
+
+        for (const ep of actEndpoints) {
+          try {
+            const actData = await fetchWithGarminPersonalKey(ep, key, corsMode);
+            if (actData) {
+              const found = parseGarminActivitiesPayload(actData, monDate);
+              appendApiLog(`Atividades sincronizadas (${found} treinos encontrados na semana).`);
+              anySuccess = true;
+              break;
+            }
+          } catch (e) {}
+        }
+
+        // 2. Tenta buscar Sono, Passos, FC de Repouso e Body Battery do dia selecionado e de hoje
+        const daysToFetch = Array.from(new Set([selectedDayIndex, todayIndex]));
+        for (const dIdx of daysToFetch) {
+          const dDate = new Date(monDate.getFullYear(), monDate.getMonth(), monDate.getDate() + dIdx);
+          const dKey = formatDateKey(dDate);
+
+          const wellnessEndpoints = [
+            `${base}/usersummary-service/usersummary/daily/?calendarDate=${dKey}`,
+            `${base}/wellness-service/wellness/dailySleepData?date=${dKey}`
+          ];
+
+          for (const wep of wellnessEndpoints) {
+            try {
+              const wData = await fetchWithGarminPersonalKey(wep, key, corsMode);
+              if (parseGarminDailyWellnessPayload(wData, dIdx)) {
+                anySuccess = true;
+              }
+            } catch (e) {}
+          }
+        }
+
+        // Aplica Auto-Check nos 7 dias da semana
+        for (let i = 0; i < 7; i++) {
+          applyGarminAutoCheckRules(i);
+        }
+
+        const nowStr = new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+        if (badge) {
+          badge.textContent = `🔑 Chave Garmin Ativa (${nowStr})`;
+          badge.classList.add('active-key');
+        }
+        appendApiLog(anySuccess
+          ? '✅ Dados recebidos e hábitos marcados automaticamente!'
+          : '🔑 Chave salva! Se o navegador bloquear CORS direto, o painel usará a memória sincronizada do GitHub.');
+
+        renderAll();
+        schedulePushToGitHub();
+      } catch (err) {
+        console.warn('Aviso ao consultar endpoint Garmin:', err);
+        if (badge) {
+          badge.textContent = '🔑 Chave Pessoal Salva';
+          badge.classList.add('active-key');
+        }
+        appendApiLog('Chave salva localmente. Verifique se há bloqueio de CORS no navegador.');
+      }
+    }
+
+    // =====================================================
+    // MOTOR DE AUTO-CHECK GARMIN -> HÁBITOS DIÁRIOS
+    // =====================================================
+    function applyGarminAutoCheckRules(dayIdx) {
+      const gm = appState.garminWeek[dayIdx];
+      if (!gm) return;
+
+      const hasWorkout = (gm.sport && gm.sport !== 'none') || Number(gm.durationMin) > 0 || Number(gm.distanceKm) > 0;
+      const hasGoodSleep = Number(gm.sleepHours) >= 7.5 || Number(gm.sleepScore) >= 80;
+      const hasGoodSteps = Number(gm.steps) >= 8000;
+
+      appState.habits.forEach(h => {
+        if (h.autoRule === 'garmin_workout' && hasWorkout) {
+          h.days[dayIdx] = true;
+        } else if (h.autoRule === 'garmin_sleep' && hasGoodSleep) {
+          h.days[dayIdx] = true;
+        } else if (h.autoRule === 'garmin_steps' && hasGoodSteps) {
+          h.days[dayIdx] = true;
+        }
+      });
+    }
+
+    function formatHoursToHm(decimalHours) {
+      const num = Number(decimalHours) || 0;
+      if (num <= 0) return '0h 00m';
+      const hrs = Math.floor(num);
+      const mins = Math.round((num - hrs) * 60);
+      return `${hrs}h ${String(mins).padStart(2, '0')}m`;
+    }
+
+    function renderGarminHub() {
+      const gm = appState.garminWeek[selectedDayIndex] || {};
+      const dayLabel = `${DAYS[selectedDayIndex]}${selectedDayIndex === todayIndex ? ' (Hoje)' : ''}`;
+      document.getElementById('garminDayBadge').textContent = dayLabel;
+
+      const apiBadge = document.getElementById('garminApiStatusBadge');
+      const modalInd = document.getElementById('modalKeyActiveIndicator');
+      if (isWatchApiConfigured()) {
+        if (apiBadge && !apiBadge.textContent.includes('Sincronizando')) {
+          apiBadge.textContent = '🔑 Chave Pessoal Ativa ✓';
+          apiBadge.classList.add('active-key');
+        }
+        if (modalInd) {
+          modalInd.textContent = 'Ativo ✓';
+          modalInd.classList.add('active-key');
+        }
+      } else {
+        if (apiBadge) {
+          apiBadge.textContent = '🔑 Colar Chave de API Pessoal';
+          apiBadge.classList.remove('active-key');
+        }
+        if (modalInd) {
+          modalInd.textContent = 'Não configurada';
+          modalInd.classList.remove('active-key');
+        }
+      }
+
+      const icon = SPORT_ICONS[gm.sport] || '🏃';
+      document.getElementById('gmSportIcon').textContent = icon;
+      const hasWorkout = (gm.sport && gm.sport !== 'none') || Number(gm.durationMin) > 0;
+      document.getElementById('gmActivityTitle').textContent = hasWorkout
+        ? (gm.title || 'Treino Concluído')
+        : 'Descanso / Sem treino';
+
+      const distStr = Number(gm.distanceKm) > 0 ? `${Number(gm.distanceKm).toFixed(1)} km` : '';
+      const durStr = Number(gm.durationMin) > 0 ? `${gm.durationMin} min` : '';
+      const hrStr = Number(gm.avgHr) > 0 ? `${gm.avgHr} bpm` : '';
+      const parts = [distStr, durStr, hrStr].filter(Boolean).join(' • ') || 'Nenhum treino registrado';
+      document.getElementById('gmActivitySub').innerHTML = hasWorkout
+        ? `<span>${parts}</span> <span class="auto-check-tag">⌚ Auto-Check</span>`
+        : `<span>${parts}</span>`;
+
+      document.getElementById('gmSleepVal').textContent = formatHoursToHm(gm.sleepHours);
+      const sleepQual = Number(gm.sleepHours) >= 7.5 || Number(gm.sleepScore) >= 80;
+      document.getElementById('gmSleepSub').innerHTML = `
+        <span>Score: <strong>${gm.sleepScore > 0 ? gm.sleepScore : '—'}</strong></span>
+        ${sleepQual ? '<span class="auto-check-tag">⌚ Auto-Check</span>' : ''}
+      `;
+
+      document.getElementById('gmHrVal').textContent = gm.restingHr > 0 ? `${gm.restingHr} bpm` : '— bpm';
+      document.getElementById('gmHrSub').innerHTML = `<span>Body Battery: <strong>${gm.bodyBattery > 0 ? gm.bodyBattery + '%' : '—'}</strong></span>`;
+
+      document.getElementById('gmStepsVal').textContent = gm.steps > 0 ? Number(gm.steps).toLocaleString('pt-BR') : '0';
+      const totalWeekKm = appState.garminWeek.reduce((acc, d) => acc + (Number(d.distanceKm) || 0), 0);
+      const totalWeekMin = appState.garminWeek.reduce((acc, d) => acc + (Number(d.durationMin) || 0), 0);
+      const weekHrs = (totalWeekMin / 60).toFixed(1);
+      document.getElementById('gmWeeklyVolSub').innerHTML = `<span>Semana: <strong>${totalWeekKm.toFixed(1)} km</strong> • <strong>${weekHrs}h</strong></span>`;
+    }
+
+    function switchGarminModalTab(subtab) {
+      const tApi = document.getElementById('garminTabApi');
+      const tMan = document.getElementById('garminTabManual');
+      const bApi = document.getElementById('subtabBtnApi');
+      const bMan = document.getElementById('subtabBtnManual');
+
+      if (subtab === 'manual') {
+        tApi.style.display = 'none';
+        tMan.style.display = 'block';
+        bApi.classList.remove('active');
+        bMan.classList.add('active');
+      } else {
+        tApi.style.display = 'block';
+        tMan.style.display = 'none';
+        bApi.classList.add('active');
+        bMan.classList.remove('active');
+      }
+    }
+
+    function toggleCustomEndpointField() {
+      const mode = document.getElementById('garminCorsMode').value;
+      document.getElementById('customEndpointGroup').style.display = mode === 'custom' ? 'block' : 'none';
+    }
+
+    function openGarminModal(defaultSubtab = 'api') {
+      document.getElementById('garminPersonalKeyInput').value = watchApiConfig.personalKey || '';
+      document.getElementById('garminCorsMode').value = watchApiConfig.corsMode || 'auto';
+      document.getElementById('garminCustomBaseUrl').value = watchApiConfig.customBaseUrl || '';
+      toggleCustomEndpointField();
+
+      const gm = appState.garminWeek[selectedDayIndex] || {};
+      document.getElementById('garminModalDayName').textContent = DAYS[selectedDayIndex];
+      document.getElementById('gmFormSport').value = gm.sport || 'none';
+      document.getElementById('gmFormTitle').value = gm.title || '';
+      document.getElementById('gmFormDist').value = gm.distanceKm || '';
+      document.getElementById('gmFormDur').value = gm.durationMin || '';
+      document.getElementById('gmFormAvgHr').value = gm.avgHr || '';
+      document.getElementById('gmFormSleepHrs').value = gm.sleepHours || '';
+      document.getElementById('gmFormSleepScore').value = gm.sleepScore || '';
+      document.getElementById('gmFormRhr').value = gm.restingHr || '';
+      document.getElementById('gmFormBb').value = gm.bodyBattery || '';
+      document.getElementById('gmFormSteps').value = gm.steps || '';
+
+      renderGarminHub();
+      switchGarminModalTab(defaultSubtab);
+      document.getElementById('garminModal').classList.add('open');
+    }
+
+    function closeGarminModal() {
+      document.getElementById('garminModal').classList.remove('open');
+    }
+
+    async function saveWatchApiConfig(event) {
+      event.preventDefault();
+      watchApiConfig = {
+        personalKey: document.getElementById('garminPersonalKeyInput').value.trim(),
+        corsMode: document.getElementById('garminCorsMode').value,
+        customBaseUrl: document.getElementById('garminCustomBaseUrl').value.trim()
+      };
+      localStorage.setItem(GARMIN_PERSONAL_KEY_STORAGE, JSON.stringify(watchApiConfig));
+
+      if (document.getElementById('syncGarminKeyToGithub').checked) {
+        appState.garminConfigSync = {
+          corsMode: watchApiConfig.corsMode,
+          customBaseUrl: watchApiConfig.customBaseUrl,
+          hasKeyConfigured: true
+        };
+      }
+
+      renderGarminHub();
+      await pullFromWatchApiDirect(false);
+    }
+
+    function disconnectWatchApi() {
+      localStorage.removeItem(GARMIN_PERSONAL_KEY_STORAGE);
+      watchApiConfig = { personalKey: '', corsMode: 'auto', customBaseUrl: '' };
+      appState.garminConfigSync = null;
+      renderGarminHub();
+      closeGarminModal();
+    }
+
+    function saveGarminDayForm(event) {
+      event.preventDefault();
+      appState.garminWeek[selectedDayIndex] = {
+        sport: document.getElementById('gmFormSport').value,
+        title: document.getElementById('gmFormTitle').value.trim(),
+        distanceKm: parseFloat(document.getElementById('gmFormDist').value) || 0,
+        durationMin: parseInt(document.getElementById('gmFormDur').value, 10) || 0,
+        avgHr: parseInt(document.getElementById('gmFormAvgHr').value, 10) || 0,
+        sleepHours: parseFloat(document.getElementById('gmFormSleepHrs').value) || 0,
+        sleepScore: parseInt(document.getElementById('gmFormSleepScore').value, 10) || 0,
+        restingHr: parseInt(document.getElementById('gmFormRhr').value, 10) || 0,
+        bodyBattery: parseInt(document.getElementById('gmFormBb').value, 10) || 0,
+        steps: parseInt(document.getElementById('gmFormSteps').value, 10) || 0
+      };
+
+      applyGarminAutoCheckRules(selectedDayIndex);
+      closeGarminModal();
+      renderAll();
+      schedulePushToGitHub();
+    }
+
+    function simulateGarminWatchSync() {
+      const presets = [
+        { sport: 'run', title: 'Rodagem Ritmo Controlado', dist: 10.0, dur: 45, hr: 152, sleep: 7.8, score: 86, rhr: 47, bb: 89, steps: 12450 },
+        { sport: 'bike', title: 'Giro de Estrada (Allez)', dist: 42.5, dur: 85, hr: 146, sleep: 7.6, score: 84, rhr: 48, bb: 85, steps: 8900 },
+        { sport: 'swim', title: 'Natação Piscina / Mar', dist: 2.2, dur: 44, hr: 138, sleep: 8.1, score: 91, rhr: 46, bb: 94, steps: 9600 },
+        { sport: 'gym', title: 'Força Funcional & Core', dist: 0, dur: 50, hr: 124, sleep: 7.5, score: 82, rhr: 49, bb: 82, steps: 9100 }
+      ];
+      const pick = presets[selectedDayIndex % presets.length];
+
+      document.getElementById('gmFormSport').value = pick.sport;
+      document.getElementById('gmFormTitle').value = pick.title;
+      document.getElementById('gmFormDist').value = pick.dist;
+      document.getElementById('gmFormDur').value = pick.dur;
+      document.getElementById('gmFormAvgHr').value = pick.hr;
+      document.getElementById('gmFormSleepHrs').value = pick.sleep;
+      document.getElementById('gmFormSleepScore').value = pick.score;
+      document.getElementById('gmFormRhr').value = pick.rhr;
+      document.getElementById('gmFormBb').value = pick.bb;
+      document.getElementById('gmFormSteps').value = pick.steps;
+    }
+
+    async function manualPullAll() {
+      if (isGhConfigured()) {
+        await pullFromGitHub();
+      }
+      if (isWatchApiConfigured()) {
+        await pullFromWatchApiDirect(true);
+      }
+      if (!isGhConfigured() && !isWatchApiConfigured()) {
+        openSyncModal();
+      }
     }
 
     function checkAndPerformAutoWeekRollover() {
@@ -1601,11 +2472,17 @@
         const previousWeekKey = appState.currentWeekKey;
         const prevMeta = getWeekMetadata(previousWeekKey);
 
-        appState.history[previousWeekKey] = createWeekSnapshot(previousWeekKey, appState.habits, false);
+        appState.history[previousWeekKey] = createWeekSnapshot(
+          previousWeekKey,
+          appState.habits,
+          appState.garminWeek,
+          false
+        );
 
         appState.habits.forEach(h => {
           h.days = [false, false, false, false, false, false, false];
         });
+        appState.garminWeek = createEmptyGarminWeek();
 
         appState.currentWeekKey = actualWeekKey;
         syncCurrentWeekToHistorySnapshot();
@@ -1615,13 +2492,6 @@
 
         saveLocalState();
         schedulePushToGitHub();
-
-        const toast = document.getElementById('rolloverToast');
-        const toastText = document.getElementById('rolloverToastText');
-        if (toast && toastText) {
-          toastText.textContent = `A ${prevMeta.fullLabel} de ${prevMeta.monthLabel} foi salva no Histórico e os gráficos comparativos de categorias já estão disponíveis!`;
-          toast.classList.add('show');
-        }
         return true;
       }
       syncCurrentWeekToHistorySnapshot();
@@ -1918,7 +2788,6 @@
         `;
       }).join('');
 
-      // Check-ins Arquivados na Semana (Layout em cartões de 7 colunas que nunca cortam no celular!)
       const hBody = document.getElementById('histMatrixBody');
       const isViewingCurrentWeek = selectedHistoryWeekKey === appState.currentWeekKey;
 
@@ -1965,7 +2834,7 @@
             });
             return { ...h, days };
           });
-          appState.history[wKey] = createWeekSnapshot(wKey, simulatedHabits, true);
+          appState.history[wKey] = createWeekSnapshot(wKey, simulatedHabits, createEmptyGarminWeek(), true);
         }
       });
 
@@ -2049,6 +2918,10 @@
         const decoded = JSON.parse(base64ToUtf8(data.content));
         appState = normalizeState(decoded);
 
+        for (let i = 0; i < 7; i++) {
+          applyGarminAutoCheckRules(i);
+        }
+
         checkAndPerformAutoWeekRollover();
         saveLocalState();
         renderAll();
@@ -2096,7 +2969,7 @@
         const contentBase64 = utf8ToBase64(JSON.stringify(appState, null, 2));
 
         const body = {
-          message: `🔄 Atualização de hábitos e histórico (${new Date().toLocaleString('pt-BR')})`,
+          message: `🔄 Atualização Super Tracker (${new Date().toLocaleString('pt-BR')})`,
           content: contentBase64
         };
         if (lastFileSha) body.sha = lastFileSha;
@@ -2126,14 +2999,6 @@
         console.error('Erro ao salvar no GitHub:', err);
         setSyncStatus('error', '⚠️ Falha ao salvar');
       }
-    }
-
-    function manualPullFromGitHub() {
-      if (!isGhConfigured()) {
-        openSyncModal();
-        return;
-      }
-      pullFromGitHub();
     }
 
     function openSyncModal() {
@@ -2230,6 +3095,7 @@
       event.preventDefault();
       const input = document.getElementById('habitInput');
       const category = document.getElementById('habitCategory').value;
+      const autoRule = document.getElementById('habitAutoRule').value;
       const name = input.value.trim();
       if (!name) return;
 
@@ -2237,10 +3103,12 @@
         id: Date.now(),
         name,
         category,
+        autoRule,
         days: [false, false, false, false, false, false, false]
       });
 
       input.value = '';
+      applyGarminAutoCheckRules(selectedDayIndex);
       renderAll();
       schedulePushToGitHub();
     }
@@ -2276,10 +3144,19 @@
         return;
       }
 
+      const ruleLabels = {
+        garmin_workout: '⌚ Auto: Treino Garmin',
+        garmin_sleep: '⌚ Auto: Sono Garmin',
+        garmin_steps: '⌚ Auto: Passos Garmin'
+      };
+
       list.innerHTML = appState.habits.map(h => {
         const isDone = h.days[selectedDayIndex];
         const streak = calculateHabitStreak(h.days);
         const totalDone = h.days.filter(Boolean).length;
+        const ruleBadge = h.autoRule && h.autoRule !== 'none'
+          ? `<span class="auto-check-tag">${ruleLabels[h.autoRule] || '⌚ Garmin'}</span>`
+          : '';
         return `
           <div class="habit-item ${isDone ? 'completed' : ''}">
             <div class="habit-left" onclick="toggleHabitDay(${h.id}, ${selectedDayIndex})">
@@ -2291,6 +3168,7 @@
                   <span>•</span>
                   <span>${totalDone}/7 na semana</span>
                   <span class="streak-pill">🔥 Seq: ${streak}d</span>
+                  ${ruleBadge}
                 </div>
               </div>
             </div>
@@ -2430,6 +3308,7 @@
 
     function renderAll() {
       syncCurrentWeekToHistorySnapshot();
+      renderGarminHub();
       renderDaySelector();
       renderTodayChecklist();
       renderChartAndKPIs();
@@ -2439,22 +3318,30 @@
       }
     }
 
-    document.addEventListener('visibilitychange', () => {
+    document.addEventListener('visibilitychange', async () => {
       if (document.visibilityState === 'visible') {
         checkAndPerformAutoWeekRollover();
         if (isGhConfigured()) {
-          pullFromGitHub();
+          await pullFromGitHub();
+        }
+        if (isWatchApiConfigured()) {
+          await pullFromWatchApiDirect(true);
         } else {
           renderAll();
         }
       }
     });
 
-    checkAndPerformAutoWeekRollover();
-    renderAll();
-    if (isGhConfigured()) {
-      pullFromGitHub();
-    }
+    (async function init() {
+      checkAndPerformAutoWeekRollover();
+      renderAll();
+      if (isGhConfigured()) {
+        await pullFromGitHub();
+      }
+      if (isWatchApiConfigured()) {
+        await pullFromWatchApiDirect(true);
+      }
+    })();
   </script>
 </body>
 </html>
