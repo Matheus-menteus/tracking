@@ -1,38 +1,29 @@
-name: Sincronizar Garmin Connect
+name: Sincronizar Garmin Personal API
 
 on:
   schedule:
-    - cron: '0 11,16,23 * * *' # Roda sozinho 3x ao dia (08h, 13h e 20h no horário de Brasília)
-  workflow_dispatch: # Permite disparar pelo botão do seu painel no celular!
+    - cron: '0 11,16,23 * * *' # Roda sozinho às 08h, 13h e 20h (Horário de Brasília)
+  workflow_dispatch: # Permite acionar com 1 clique de dentro do seu Painel!
 
 permissions:
   contents: write
 
 jobs:
-  sync-garmin:
+  sync-garmin-api:
     runs-on: ubuntu-latest
     steps:
       - name: Baixar Repositório
         uses: actions/checkout@v4
 
-      - name: Configurar Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
-
-      - name: Instalar biblioteca Garmin
-        run: pip install garminconnect
-
-      - name: Executar Sincronização Garmin -> memoria.json
+      - name: Executar Extração Direta via Garmin Personal API
         env:
-          GARMIN_EMAIL: ${{ secrets.GARMIN_EMAIL }}
-          GARMIN_PASSWORD: ${{ secrets.GARMIN_PASSWORD }}
-        run: python sync_garmin.py
+          GARMIN_PERSONAL_API_KEY: ${{ secrets.GARMIN_PERSONAL_API_KEY }}
+        run: python3 sync_garmin.py
 
-      - name: Salvar memoria.json atualizado no GitHub
+      - name: Gravar Dados no memoria.json
         run: |
-          git config user.name "Garmin Super Tracker Bot"
+          git config user.name "Garmin API Bot"
           git config user.email "bot@github.com"
           git add memoria.json
-          git diff --staged --quiet || git commit -m "⌚ Sync automático Garmin Connect"
+          git diff --staged --quiet || git commit -m "⌚ Sync direto via Garmin Personal API"
           git push
